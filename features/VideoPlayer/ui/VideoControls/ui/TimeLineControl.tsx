@@ -1,27 +1,13 @@
 import { View } from "react-native";
 
-import { useEvent } from "expo";
-import { VideoPlayer } from "expo-video";
-
 import Slider from "@react-native-community/slider";
+import { useVideoPlayerStore } from "@/features/VideoPlayer/models/store";
 
-type TimeLineControlProps = { player: VideoPlayer };
+export const TimeLineControl = () => {
+  const player = useVideoPlayerStore(state => state.player)
 
-export const TimeLineControl = ({ player }: TimeLineControlProps) => {
-  const { currentTime } = useEvent(player, "timeUpdate", {
-    currentTime: player.currentTime,
-    currentLiveTimestamp: null,
-    currentOffsetFromLive: null,
-    bufferedPosition: 0,
-  });
-
-  const { duration } = useEvent(player, "sourceLoad", {
-    duration: player.duration,
-    videoSource: null,
-    availableVideoTracks: [],
-    availableSubtitleTracks: [],
-    availableAudioTracks: [],
-  });
+  const currentTime = useVideoPlayerStore(state => state.currentTime)
+  const duration = useVideoPlayerStore(state => state.duration)
 
   return (
     <View className="flex-col items-center w-full">
@@ -33,7 +19,7 @@ export const TimeLineControl = ({ player }: TimeLineControlProps) => {
         minimumTrackTintColor="#ED0000"
         maximumTrackTintColor="#ffffff"
         thumbTintColor="#ED0000"
-        onSlidingComplete={value => player.seekBy(value)}
+        onSlidingComplete={value => player?.seekBy(value)}
       />
     </View>
   );

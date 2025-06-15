@@ -1,30 +1,18 @@
 import { Text, View } from "react-native";
 
 import { useEvent } from "expo";
-import { VideoPlayer } from "expo-video";
 import { formattedTime } from "../utils";
+import { useVideoPlayerStore } from "@/features/VideoPlayer/models/store";
 
-type TimeLapsControlProps = { player: VideoPlayer };
+export const TimeLapsControl = () => {
+  const currentTime = useVideoPlayerStore(state => state.currentTime)
+  const duration = useVideoPlayerStore(state => state.duration)
 
-export const TimeLapsControl = ({ player }: TimeLapsControlProps) => {
-  const { currentTime } = useEvent(player, "timeUpdate", {
-    currentTime: player.currentTime,
-    currentLiveTimestamp: null,
-    currentOffsetFromLive: null,
-    bufferedPosition: 0,
-  });
-
-  const { duration } = useEvent(player, "sourceLoad", {
-    duration: player.duration,
-    videoSource: null,
-    availableVideoTracks: [],
-    availableSubtitleTracks: [],
-    availableAudioTracks: [],
-  });
+  const isFullscreen = useVideoPlayerStore(state => state.isFullscreen)
 
   return (
     <View>
-      <Text className="text-white text-xs">
+      <Text className={`text-white ${isFullscreen ? "text-xs" : "text-xs"}`}>
         {formattedTime(currentTime || 0)} / {formattedTime(duration || 0)}
       </Text>
     </View>

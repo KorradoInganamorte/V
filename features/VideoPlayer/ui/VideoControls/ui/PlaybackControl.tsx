@@ -1,27 +1,23 @@
 import { ActivityIndicator, TouchableOpacity, View} from "react-native";
 
-import { useEvent } from "expo";
-import { VideoPlayer } from "expo-video";
-
 import PlayIcon from "@expo/vector-icons/FontAwesome5";
 import PauseIcon from "@expo/vector-icons/Fontisto";
 import ReplayIcon from '@expo/vector-icons/MaterialIcons';
+import { useVideoPlayerStore } from "@/features/VideoPlayer/models/store";
 
-type PlaybackControlProps = {
-  player: VideoPlayer;
-};
-
-export const PlaybackControl = ({ player }: PlaybackControlProps) => {
-  const { isPlaying } = useEvent(player, "playingChange", { isPlaying: player.playing });
-  const { status } = useEvent(player, "statusChange", { status: player.status })
+export const PlaybackControl = () => {
+  const player = useVideoPlayerStore(state => state.player)
+  const isPlaying = useVideoPlayerStore(state => state.isPlaying)
+  const status = useVideoPlayerStore(state => state.status)
+  const isFullscreen = useVideoPlayerStore(state => state.isFullscreen)
 
   const onPlaybackPress = () => {
-    if (isPlaying) player.pause();
-    else player.play();
+    if (isPlaying) player?.pause();
+    else player?.play();
   };
 
   const onReplayPress = () => {
-    player.replay();
+    player?.replay();
   };
 
   return (
@@ -30,10 +26,10 @@ export const PlaybackControl = ({ player }: PlaybackControlProps) => {
         {
         status === "readyToPlay" 
           ? isPlaying 
-            ? <PauseIcon onPress={onPlaybackPress} name="pause" size={20} color="white" />
-            : <PlayIcon onPress={onPlaybackPress} className="translate-x-[1.5] translate-y-[0.5]" name="play" size={20} color="white" />
-        : status === "idle" ? <ReplayIcon onPress={onReplayPress} name="replay" size={32} color="white" />
-        : status === "loading" && <ActivityIndicator size={32} color="white" />
+            ? <PauseIcon onPress={onPlaybackPress} name="pause" size={isFullscreen ? 20 : 20} color="white" />
+            : <PlayIcon onPress={onPlaybackPress} className="translate-x-[1.5] translate-y-[0.5]" name="play" size={isFullscreen ? 20 : 20} color="white" />
+        : status === "idle" ? <ReplayIcon onPress={onReplayPress} name="replay" size={isFullscreen ? 32 : 32} color="white" />
+        : status === "loading" && <ActivityIndicator size={isFullscreen ? 32 : 32} color="white" />
         }
       </View>
     </TouchableOpacity>

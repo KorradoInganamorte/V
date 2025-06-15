@@ -2,37 +2,33 @@ import { TouchableOpacity } from "react-native";
 
 import { useNavigation } from "expo-router";
 import * as ScreenOrientation from "expo-screen-orientation";
-import { VideoView } from "expo-video";
-
 
 import ExpandIcon from "@expo/vector-icons/FontAwesome6";
 import CollapseIcon from "@expo/vector-icons/MaterialCommunityIcons";
 import { changeScreenOrientation } from "@/shared/utils";
+import { useVideoPlayerStore } from "@/features/VideoPlayer/models/store";
 
-type FullscreenControlProps = {
-  videoRef: React.RefObject<VideoView | null>;
-  isFullscreen: boolean;
-  setIsFullscreen: React.Dispatch<React.SetStateAction<boolean>>;
-};
-
-export const FullscreenControl = ({ videoRef, isFullscreen, setIsFullscreen }: FullscreenControlProps) => {
+export const FullscreenControl = () => {
   const navigation = useNavigation()
+
+  const isFullscreen = useVideoPlayerStore(state => state.isFullscreen)
+  const changeFullscreen = useVideoPlayerStore(state => state.changeFullscreen)
   
   const onEnterFullscreen = async () => {
     await changeScreenOrientation(ScreenOrientation.OrientationLock.LANDSCAPE_RIGHT);
     navigation.setOptions({ headerShown: false })
-    setIsFullscreen(true);
+    changeFullscreen(true);
   };
 
   const onExitFullscreen = async () => {
     await changeScreenOrientation(ScreenOrientation.OrientationLock.PORTRAIT_UP);
     navigation.setOptions({ headerShown: true })
-    setIsFullscreen(false);
+    changeFullscreen(false);
   };
 
   return (
     <TouchableOpacity onPress={() => (isFullscreen ? onExitFullscreen() : onEnterFullscreen())}>
-      {isFullscreen ? <CollapseIcon name="arrow-collapse" size={20} color="white" /> : <ExpandIcon name="expand" size={20} color="white" />}
+      {isFullscreen ? <CollapseIcon name="arrow-collapse" size={isFullscreen ? 20 : 20} color="white" /> : <ExpandIcon name="expand" size={isFullscreen ? 20 : 20} color="white" />}
     </TouchableOpacity>
   );
 };
