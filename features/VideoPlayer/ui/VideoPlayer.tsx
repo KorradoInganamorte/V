@@ -2,12 +2,13 @@ import { View, Text } from "react-native";
 import { useState, useRef } from "react";
 import { useVideoPlayer, VideoView } from "expo-video";
 
-import { FullscreenControl, PlaybackControl } from "./VideoControls";
+import { FullscreenControl, PlaybackControl, TimeLapsControl, TimeLineControl } from "./VideoControls";
 
 export const VideoPlayer = () => {
   const [videoUrl] = useState<string>("https://openings.moe/video/HigurashiNoNakuKoroNi-OP01-NCBD.mp4");
   const player = useVideoPlayer(videoUrl, player => {
     player.loop = false;
+    player.timeUpdateEventInterval = 1
   });
 
   const videoRef = useRef<VideoView>(null);
@@ -30,13 +31,21 @@ export const VideoPlayer = () => {
               nativeControls={false}
             />
 
+            {/* Пауза/Воспроизведение */}
             <View className="absolute w-full h-full justify-center items-center px-3">
               <PlaybackControl player={player} />
             </View>
 
-            <View className="absolute bottom-0 w-full h-12 justify-center">
-              <View className="w-min h-min flex-row justify-end px-4">
+            {/* Нижние элементы управления */}
+            <View className="absolute bottom-0 w-full">
+              {/* Верхний ряд: время и fullscreen */}
+              <View className="flex-row justify-between items-end px-4 mb-1">
+                <TimeLapsControl player={player} />
                 <FullscreenControl videoRef={videoRef} isFullscreen={isFullscreen} setIsFullscreen={setIsFullscreen} />
+              </View>
+              {/* Нижний ряд: таймлайн */}
+              <View className="w-full pb-1">
+                <TimeLineControl player={player} />
               </View>
             </View>
           </View>

@@ -5,8 +5,8 @@ import "./global.css"
 
 export default function App() {
   return (
-    <View style={{ flex: 1 }}>
-      <VideoPlayer />
-    </View>
+      <View>
+        <VideoPlayer />
+      </View>
   );
 }

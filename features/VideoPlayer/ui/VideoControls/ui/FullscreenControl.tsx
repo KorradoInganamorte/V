@@ -1,4 +1,4 @@
-import { TouchableOpacity, View } from "react-native";
+import { TouchableOpacity } from "react-native";
 import { VideoView } from "expo-video";
 
 import ExpandIcon from "@expo/vector-icons/FontAwesome6";
@@ -22,14 +22,8 @@ export const FullscreenControl = ({ videoRef, isFullscreen, setIsFullscreen }: F
   };
 
   return (
-    <View className="relative">
-      <TouchableOpacity onPress={() => (isFullscreen ? onExitFullscreen() : onEnterFullscreen())}>
-        {isFullscreen ? (
-          <CollapseIcon name="arrow-collapse" size={24} color="white" />
-        ) : (
-          <ExpandIcon name="expand" size={24} color="white" />
-        )}
-      </TouchableOpacity>
-    </View>
+    <TouchableOpacity onPress={() => (isFullscreen ? onExitFullscreen() : onEnterFullscreen())}>
+      {isFullscreen ? <CollapseIcon name="arrow-collapse" size={20} color="white" /> : <ExpandIcon name="expand" size={20} color="white" />}
+    </TouchableOpacity>
   );
 };
