@@ -2,6 +2,7 @@ import { Text, View } from "react-native";
 
 import { useEvent } from "expo";
 import { VideoPlayer } from "expo-video";
+import { formattedTime } from "../utils";
 
 type TimeLapsControlProps = { player: VideoPlayer };
 
@@ -24,14 +25,8 @@ export const TimeLapsControl = ({ player }: TimeLapsControlProps) => {
   return (
     <View>
       <Text className="text-white text-xs">
-        {formatTime(currentTime || 0)} / {formatTime(duration || 0)}
+        {formattedTime(currentTime || 0)} / {formattedTime(duration || 0)}
       </Text>
     </View>
   );
 };
-
-function formatTime(sec: number) {
-  const m = Math.floor(sec / 60);
-  const s = Math.floor(sec % 60);
-  return `${m}:${s < 10 ? "0" : ""}${s}`;
-}
