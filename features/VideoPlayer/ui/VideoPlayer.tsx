@@ -1,5 +1,6 @@
-import { View, Text } from "react-native";
 import { useState, useRef } from "react";
+import { View, Text } from "react-native";
+
 import { useVideoPlayer, VideoView } from "expo-video";
 
 import { FullscreenControl, PlaybackControl, TimeLapsControl, TimeLineControl } from "./VideoControls";
@@ -8,7 +9,7 @@ export const VideoPlayer = () => {
   const [videoUrl] = useState<string>("https://openings.moe/video/HigurashiNoNakuKoroNi-OP01-NCBD.mp4");
   const player = useVideoPlayer(videoUrl, player => {
     player.loop = false;
-    player.timeUpdateEventInterval = 1
+    player.timeUpdateEventInterval = 1;
   });
 
   const videoRef = useRef<VideoView>(null);

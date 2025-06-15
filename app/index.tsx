@@ -1,4 +1,5 @@
 import { View } from "react-native";
+
 import { VideoPlayer } from "@/features/VideoPlayer";
 
 import "./global.css"

@@ -1,4 +1,5 @@
 import { TouchableOpacity } from "react-native";
+
 import { VideoView } from "expo-video";
 
 import ExpandIcon from "@expo/vector-icons/FontAwesome6";

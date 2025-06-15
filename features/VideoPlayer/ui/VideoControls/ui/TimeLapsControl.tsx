@@ -1,6 +1,7 @@
 import { Text, View } from "react-native";
-import { VideoPlayer } from "expo-video";
+
 import { useEvent } from "expo";
+import { VideoPlayer } from "expo-video";
 
 type TimeLapsControlProps = { player: VideoPlayer };
 
