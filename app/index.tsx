@@ -6,7 +6,7 @@ import "./global.css"
 
 export default function App() {
   return (
-      <View className="flex-1 p-2">
+      <View className="flex-1">
         <VideoPlayer />
       </View>
   );

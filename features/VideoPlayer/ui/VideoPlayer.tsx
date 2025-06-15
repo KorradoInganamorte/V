@@ -17,12 +17,23 @@ export const VideoPlayer = () => {
   const [isFullscreen, setIsFullscreen] = useState<boolean>(false);
 
   return (
-    <>
+    <View className="justify-center items-center bg-black">
       {videoUrl ? (
-        <View className="relative w-full aspect-video">
+        <View className={`relative ${isFullscreen ? "h-full" : "w-full"} aspect-video`}>
           <VideoView
             ref={videoRef}
-            style={{ width: "100%", height: "100%", backgroundColor: "rgba(0, 0, 0, 0.1)", borderRadius: 10 }}
+            style={
+              isFullscreen ? {
+                width: "100%",
+                height: "100%",
+                backgroundColor: "rgba(0, 0, 0, 1)",
+                borderRadius: 6,
+              } : {
+                width: "100%",
+                height: "100%",
+                backgroundColor: "rgba(0, 0, 0, 0.85)",
+              }
+            }
             player={player}
             allowsFullscreen
             allowsPictureInPicture
@@ -54,6 +65,6 @@ export const VideoPlayer = () => {
           </View>
         </View>
       )}
-    </>
+    </View>
   );
 };
