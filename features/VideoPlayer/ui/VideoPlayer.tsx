@@ -1,10 +1,11 @@
+import { useEffect } from "react";
 import { Text, View } from "react-native";
 
+import { useEvent } from "expo";
 import { useVideoPlayer, VideoView } from "expo-video";
 
-import { FullscreenControl, PlaybackControl, TimeLapsControl, TimeLineControl } from "./VideoControls";
 import { useVideoPlayerStore } from "../models/store";
-import { useEvent } from "expo";
+import { FullscreenControl, PlaybackControl, TimeLapsControl, TimeLineControl } from "./VideoControls";
 
 export const VideoPlayer = () => {
   const videoUrl = useVideoPlayerStore(state => state.videoUrl);
@@ -20,13 +21,13 @@ export const VideoPlayer = () => {
     player.loop = false;
     player.timeUpdateEventInterval = 1;
   });
-  setPlayer(player);
+  useEffect(() => { setPlayer(player); }, [player, setPlayer]);
 
   const { status, error } = useEvent(player, "statusChange", { status: player.status });
-  setStatus(status);
+  useEffect(() => { setStatus(status); }, [status, setStatus]);
 
   const { isPlaying } = useEvent(player, "playingChange", { isPlaying: player.playing });
-  setIsPlaying(isPlaying);
+  useEffect(() => { setIsPlaying(isPlaying); }, [isPlaying, setIsPlaying]);
 
   const { currentTime } = useEvent(player, "timeUpdate", {
     currentTime: player.currentTime,
@@ -34,7 +35,7 @@ export const VideoPlayer = () => {
     currentOffsetFromLive: null,
     bufferedPosition: 0,
   });
-  setCurrentTime(currentTime);
+  useEffect(() => { setCurrentTime(currentTime); }, [currentTime, setCurrentTime]);
 
   const { duration } = useEvent(player, "sourceLoad", {
     duration: player.duration,
@@ -43,7 +44,7 @@ export const VideoPlayer = () => {
     availableSubtitleTracks: [],
     availableAudioTracks: [],
   });
-  setDuration(duration);
+  useEffect(() => { setDuration(duration); }, [duration, setDuration]);
 
   return (
     <View className="justify-center items-center bg-black">

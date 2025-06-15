@@ -5,8 +5,8 @@ import * as ScreenOrientation from "expo-screen-orientation";
 
 import ExpandIcon from "@expo/vector-icons/FontAwesome6";
 import CollapseIcon from "@expo/vector-icons/MaterialCommunityIcons";
-import { changeScreenOrientation } from "@/shared/utils";
 import { useVideoPlayerStore } from "@/features/VideoPlayer/models/store";
+import { changeScreenOrientation } from "@/shared/utils";
 
 export const FullscreenControl = () => {
   const navigation = useNavigation()

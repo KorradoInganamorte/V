@@ -1,8 +1,7 @@
 import { Text, View } from "react-native";
 
-import { useEvent } from "expo";
-import { formattedTime } from "../utils";
 import { useVideoPlayerStore } from "@/features/VideoPlayer/models/store";
+import { formattedTime } from "../utils";
 
 export const TimeLapsControl = () => {
   const currentTime = useVideoPlayerStore(state => state.currentTime)
