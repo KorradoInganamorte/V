@@ -30,9 +30,9 @@ export const TimeLineControl = ({ player }: TimeLineControlProps) => {
         minimumValue={0}
         maximumValue={duration || 1}
         value={currentTime || 0}
-        minimumTrackTintColor="#fff"
-        maximumTrackTintColor="#888"
-        thumbTintColor="#fff"
+        minimumTrackTintColor="#ED0000"
+        maximumTrackTintColor="#ffffff"
+        thumbTintColor="#ED0000"
         onSlidingComplete={value => player.seekBy(value)}
       />
     </View>
