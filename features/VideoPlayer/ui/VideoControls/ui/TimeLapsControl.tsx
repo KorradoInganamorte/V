@@ -11,8 +11,8 @@ export const TimeLapsControl = () => {
 
   return (
     <View>
-      <Text className={`text-white ${isFullscreen ? "text-xs" : "text-xs"}`}>
-        {formattedTime(currentTime || 0)} / {formattedTime(duration || 0)}
+      <Text className={`text-white ${isFullscreen ? "text-sm" : "text-xs"}`}>
+        {formattedTime(currentTime || 0)} / <Text className="text-slate-300">{formattedTime(duration || 0)}</Text>
       </Text>
     </View>
   );
