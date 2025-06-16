@@ -36,6 +36,11 @@ module.exports = defineConfig([
               position: "after",
             },
             {
+              pattern: "react-native-*",
+              group: "builtin",
+              position: "after",
+            },
+            {
               pattern: "@react-native/**",
               group: "builtin",
               position: "after",

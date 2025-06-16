@@ -1,8 +1,9 @@
 import { useRef, useState } from "react";
 import { Animated, View, Text, Easing } from "react-native";
-import AntDesign from "@expo/vector-icons/AntDesign";
 import { Gesture, GestureDetector } from "react-native-gesture-handler";
 import { runOnJS } from "react-native-reanimated";
+
+import Icons from "@expo/vector-icons/AntDesign";
 
 import { useVideoPlayerStore } from "@/features/VideoPlayer/models/store";
 
@@ -61,7 +62,7 @@ export const SkipControl = () => {
                 borderBottomRightRadius: 200,
               }}
             >
-              <AntDesign name="banckward" size={24} color="white" />
+              <Icons name="banckward" size={24} color="white" />
               <Text className="mt-2 text-lg font-bold text-white">-10 сек</Text>
             </Animated.View>
           )}
@@ -79,7 +80,7 @@ export const SkipControl = () => {
                 borderBottomLeftRadius: 200,
               }}
             >
-              <AntDesign name="forward" size={24} color="white" />
+              <Icons name="forward" size={24} color="white" />
               <Text className="mt-2 text-lg font-bold text-white">+10 сек</Text>
             </Animated.View>
           )}
