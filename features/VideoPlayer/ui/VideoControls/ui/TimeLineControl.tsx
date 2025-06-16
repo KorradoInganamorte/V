@@ -9,6 +9,11 @@ export const TimeLineControl = () => {
   const currentTime = useVideoPlayerStore(state => state.currentTime)
   const duration = useVideoPlayerStore(state => state.duration)
 
+  const isSliding = useVideoPlayerStore(state => state.isSliding)
+  const setIsSliding = useVideoPlayerStore(state => state.setIsSliding)
+
+  const setPreviewTime = useVideoPlayerStore(state => state.setPreviewTime);
+
   return (
     <View className="flex-col items-center w-full">
       <Slider
@@ -19,7 +24,11 @@ export const TimeLineControl = () => {
         minimumTrackTintColor="#ED0000"
         maximumTrackTintColor="#ffffff"
         thumbTintColor="#ED0000"
-        onSlidingComplete={value => player?.seekBy(value)}
+        onSlidingStart={() => setIsSliding(true)}
+        onValueChange={(value) => {
+          if(isSliding) setPreviewTime(value)
+        }}
+        onSlidingComplete={value => player?.seekBy(value - currentTime)}
       />
     </View>
   );

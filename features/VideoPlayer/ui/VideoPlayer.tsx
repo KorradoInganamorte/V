@@ -15,15 +15,16 @@ export const VideoPlayer = () => {
   const setStatus = useVideoPlayerStore(state => state.setStatus);
   const setIsPlaying = useVideoPlayerStore(state => state.setIsPlaying);
   const setCurrentTime = useVideoPlayerStore(state => state.setCurrentTime);
+  const setPreviewTime = useVideoPlayerStore(state => state.setPreviewTime);
   const setDuration = useVideoPlayerStore(state => state.setDuration);
 
   const player = useVideoPlayer(videoUrl, player => {
     player.loop = false;
-    player.timeUpdateEventInterval = 1;
+    player.timeUpdateEventInterval = 0.1;
   });
   useEffect(() => { setPlayer(player); }, [player, setPlayer]);
 
-  const { status, error } = useEvent(player, "statusChange", { status: player.status });
+  const { status } = useEvent(player, "statusChange", { status: player.status });
   useEffect(() => { setStatus(status); }, [status, setStatus]);
 
   const { isPlaying } = useEvent(player, "playingChange", { isPlaying: player.playing });
@@ -35,7 +36,10 @@ export const VideoPlayer = () => {
     currentOffsetFromLive: null,
     bufferedPosition: 0,
   });
-  useEffect(() => { setCurrentTime(currentTime); }, [currentTime, setCurrentTime]);
+  useEffect(() => {
+    setCurrentTime(currentTime);
+    setPreviewTime(currentTime);
+  }, [currentTime, setCurrentTime, setPreviewTime]);
 
   const { duration } = useEvent(player, "sourceLoad", {
     duration: player.duration,

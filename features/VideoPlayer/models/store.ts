@@ -1,6 +1,5 @@
 import { VideoPlayer, VideoPlayerStatus } from "expo-video";
 import { create } from "zustand"
-
 type VideoPlayerState = {
   player: VideoPlayer | null
   setPlayer: (player: VideoPlayer) => void
@@ -13,6 +12,11 @@ type VideoPlayerState = {
 
   currentTime: number
   setCurrentTime: (currentTime: number) => void
+  previewTime: number;
+  setPreviewTime: (previewTime: number) => void;
+
+  isSliding: boolean
+  setIsSliding: (isSliding: boolean) => void
 
   duration: number
   setDuration: (duration: number) => void
@@ -35,6 +39,11 @@ export const useVideoPlayerStore = create<VideoPlayerState>((set) => ({
 
   currentTime: 0,
   setCurrentTime: (currentTime) => set({ currentTime: currentTime }),
+  previewTime: 0,
+  setPreviewTime: (previewTime) => set({ previewTime: previewTime }),
+
+  isSliding: false,
+  setIsSliding: (isSliding) => set({ isSliding: isSliding }),
 
   duration: 0,
   setDuration: (duration: number) => set({ duration: duration }),
