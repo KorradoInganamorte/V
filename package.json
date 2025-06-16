@@ -50,6 +50,7 @@
     "eslint": "^9.25.0",
     "eslint-config-expo": "~9.2.0",
     "eslint-plugin-import": "^2.31.0",
+    "eslint-plugin-tailwindcss": "^3.18.0",
     "typescript": "~5.8.3"
   },
   "private": true

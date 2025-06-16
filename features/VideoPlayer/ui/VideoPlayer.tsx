@@ -51,7 +51,7 @@ export const VideoPlayer = () => {
   useEffect(() => { setDuration(duration); }, [duration, setDuration]);
 
   return (
-    <View className="justify-center items-center bg-black">
+    <View className="items-center justify-center bg-black">
       <View className={`relative ${isFullscreen ? "h-full" : "w-full"} aspect-video`}>
         <VideoView
           style={
@@ -75,17 +75,17 @@ export const VideoPlayer = () => {
         />
 
         {status === "error" && (
-          <View className="absolute top-0 left-0 w-full h-full justify-center items-center z-10">
-            <Text className="text-white text-2 font-medium px-4 py-2 bg-red-600/80 rounded">Произошла ошибка при загрузке видео</Text>
+          <View className="absolute left-0 top-0 z-10 h-full w-full items-center justify-center">
+            <Text className="text-2 rounded bg-red-600/80 px-4 py-2 font-medium text-white">Произошла ошибка при загрузке видео</Text>
           </View>
         )}
 
-        <View className="absolute w-full h-full justify-center items-center px-3">
+        <View className="absolute h-full w-full items-center justify-center px-3">
           <PlaybackControl />
         </View>
 
         <View className="absolute bottom-0 w-full">
-          <View className="flex-row justify-between items-end px-4 mb-1">
+          <View className="mb-1 flex-row items-end justify-between px-4">
             <TimeLapsControl />
             <FullscreenControl />
           </View>

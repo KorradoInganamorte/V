@@ -2,23 +2,29 @@
 const { defineConfig } = require("eslint/config");
 const expoConfig = require("eslint-config-expo/flat");
 
+const imports = require("eslint-plugin-import")
+const tailwindcss = require("eslint-plugin-tailwindcss")
+
 module.exports = defineConfig([
   expoConfig,
   {
+    plugins: {
+      tailwindcss,
+      imports,
+    },
     rules: {
       "import/order": [
         "error",
         {
           groups: [
-            "builtin", // react, react-native, @react-native, expo, expo-video, @expo
-            "external", // внешние библиотеки
-            "internal", // ваши алиасы, если есть
+            "builtin",
+            "external",
+            "internal",
             "parent",
             "sibling",
             "index",
           ],
           pathGroups: [
-            // Сначала react, react-native, @react-native/**
             {
               pattern: "react",
               group: "builtin",
@@ -34,7 +40,6 @@ module.exports = defineConfig([
               group: "builtin",
               position: "after",
             },
-            // Затем expo, expo-*, @expo/**
             {
               pattern: "expo",
               group: "builtin",
@@ -56,6 +61,15 @@ module.exports = defineConfig([
           "newlines-between": "ignore",
         },
       ],
+      'tailwindcss/classnames-order': ['error', {
+        classGroups: [
+          ['static', 'fixed', 'absolute', 'relative', 'sticky'],
+          ['block', 'inline-block', 'inline', 'flex', 'inline-flex', 'grid', 'inline-grid', 'contents', 'hidden'],
+          ['h-\\S+', 'min-h-\\S+', 'max-h-\\S+'],
+          ['w-\\S+', 'min-w-\\S+', 'max-w-\\S+'],
+          'others',
+        ]
+       }]
     },
     ignores: ["dist/*"],
   },

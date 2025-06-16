@@ -15,7 +15,7 @@ export const TimeLineControl = () => {
   const setPreviewTime = useVideoPlayerStore(state => state.setPreviewTime);
 
   return (
-    <View className="flex-col items-center w-full">
+    <View className="w-full flex-col items-center">
       <Slider
         style={{ width: "100%" }}
         minimumValue={0}
