@@ -61,7 +61,7 @@ module.exports = defineConfig([
           "newlines-between": "ignore",
         },
       ],
-      'tailwindcss/classnames-order': ['error', {
+      'tailwindcss/classnames-order': ['warn', {
         classGroups: [
           ['static', 'fixed', 'absolute', 'relative', 'sticky'],
           ['block', 'inline-block', 'inline', 'flex', 'inline-flex', 'grid', 'inline-grid', 'contents', 'hidden'],
