@@ -21,17 +21,15 @@ export const PlaybackControl = () => {
   };
 
   return (
-    <TouchableOpacity>
-      <View className={`flex justify-center items-center ${isFullscreen ? "w-16 h-16" : "w-12 h-12"} bg-black/40 rounded-full`}>
+    <View className={`${isFullscreen ? "w-16 h-16" : "w-12 h-12"} bg-black/40 rounded-full`}>
         {
         status === "readyToPlay" 
         ? isPlaying 
-          ? <PauseIcon onPress={onPlaybackPress} name="pause" size={isFullscreen ? 26 : 20} color="white" />
-          : <PlayIcon onPress={onPlaybackPress} className="translate-x-[1.5] translate-y-[0.5]" name="play" size={isFullscreen ? 26 : 20} color="white" />
-        : status === "idle" ? <ReplayIcon onPress={onReplayPress} name="replay" size={isFullscreen ? 38 : 32} color="white" />
-        : status === "loading" && <ActivityIndicator size={isFullscreen ? 38 : 32} color="white" />
+          ? <TouchableOpacity onPress={onPlaybackPress} className="w-full h-full flex justify-center items-center"><PauseIcon name="pause" size={isFullscreen ? 26 : 20} color="white" /></TouchableOpacity>
+          : <TouchableOpacity onPress={onPlaybackPress} className="w-full h-full flex justify-center items-center"><PlayIcon className="translate-x-[1.5] translate-y-[0.5]" name="play" size={isFullscreen ? 26 : 20} color="white" /></TouchableOpacity>
+        : status === "idle" ? <TouchableOpacity onPress={onReplayPress} className="w-full h-full flex justify-center items-center"><ReplayIcon name="replay" size={isFullscreen ? 38 : 32} color="white" /></TouchableOpacity>
+        : status === "loading" && <TouchableOpacity className="w-full h-full flex justify-center items-center"><ActivityIndicator size={isFullscreen ? 38 : 32} color="white" /></TouchableOpacity>
         }
-      </View>
-    </TouchableOpacity>
+    </View>
   );
 };

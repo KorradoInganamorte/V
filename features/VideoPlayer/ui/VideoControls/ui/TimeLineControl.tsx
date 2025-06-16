@@ -25,9 +25,7 @@ export const TimeLineControl = () => {
         maximumTrackTintColor="#ffffff"
         thumbTintColor="#ED0000"
         onSlidingStart={() => setIsSliding(true)}
-        onValueChange={(value) => {
-          if(isSliding) setPreviewTime(value)
-        }}
+        onValueChange={(value) => (isSliding) && setPreviewTime(value)}
         onSlidingComplete={value => player?.seekBy(value - currentTime)}
       />
     </View>
