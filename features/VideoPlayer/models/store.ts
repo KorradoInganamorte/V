@@ -1,5 +1,6 @@
 import { VideoPlayer, VideoPlayerStatus } from "expo-video";
 import { create } from "zustand"
+
 type VideoPlayerState = {
   player: VideoPlayer | null
   setPlayer: (player: VideoPlayer) => void
@@ -9,6 +10,8 @@ type VideoPlayerState = {
 
   isPlaying: boolean,
   setIsPlaying: (isPlaying: boolean) => void
+  onPlayback: () => void
+  onReplay: () => void
 
   isEnded: boolean
   setIsEnded: (isEnded: boolean) => void
@@ -30,7 +33,7 @@ type VideoPlayerState = {
   changeFullscreen: (isFullscreen: boolean) => void;
 };
 
-export const useVideoPlayerStore = create<VideoPlayerState>((set) => ({
+export const useVideoPlayerStore = create<VideoPlayerState>((set, get) => ({
   player: null,
   setPlayer: (player) => set({ player: player }),
 
@@ -39,6 +42,19 @@ export const useVideoPlayerStore = create<VideoPlayerState>((set) => ({
 
   isPlaying: false,
   setIsPlaying: (isPlaying) => set({ isPlaying: isPlaying }),
+  onPlayback: () => {
+    const player = get().player;
+    const isPlaying = get().isPlaying;
+
+    if (isPlaying) player?.pause();
+    else player?.play();
+  },
+  onReplay: () => {
+    const player = get().player;
+
+    player?.replay();
+    set({ isEnded: false })
+  },
 
   isEnded: false,
   setIsEnded: (isEnded) => set({ isEnded: isEnded }),
