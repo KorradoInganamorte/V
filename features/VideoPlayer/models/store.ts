@@ -10,6 +10,9 @@ type VideoPlayerState = {
   isPlaying: boolean,
   setIsPlaying: (isPlaying: boolean) => void
 
+  isEnded: boolean
+  setIsEnded: (isEnded: boolean) => void
+
   currentTime: number
   setCurrentTime: (currentTime: number) => void
   previewTime: number;
@@ -36,6 +39,9 @@ export const useVideoPlayerStore = create<VideoPlayerState>((set) => ({
 
   isPlaying: false,
   setIsPlaying: (isPlaying) => set({ isPlaying: isPlaying }),
+
+  isEnded: false,
+  setIsEnded: (isEnded) => set({ isEnded: isEnded }),
 
   currentTime: 0,
   setCurrentTime: (currentTime) => set({ currentTime: currentTime }),

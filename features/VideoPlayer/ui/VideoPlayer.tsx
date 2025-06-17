@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useCallback, useEffect } from "react";
 import { Text, View } from "react-native";
 
 import { useEvent } from "expo";
@@ -14,6 +14,7 @@ export const VideoPlayer = () => {
   const setPlayer = useVideoPlayerStore(state => state.setPlayer);
   const setStatus = useVideoPlayerStore(state => state.setStatus);
   const setIsPlaying = useVideoPlayerStore(state => state.setIsPlaying);
+  const setIsEnded = useVideoPlayerStore(state => state.setIsEnded);
   const setCurrentTime = useVideoPlayerStore(state => state.setCurrentTime);
   const setPreviewTime = useVideoPlayerStore(state => state.setPreviewTime);
   const setDuration = useVideoPlayerStore(state => state.setDuration);
@@ -25,16 +26,6 @@ export const VideoPlayer = () => {
   useEffect(() => {
     setPlayer(player);
   }, [player, setPlayer]);
-
-  const { status } = useEvent(player, "statusChange", { status: player.status });
-  useEffect(() => {
-    setStatus(status);
-  }, [status, setStatus]);
-
-  const { isPlaying } = useEvent(player, "playingChange", { isPlaying: player.playing });
-  useEffect(() => {
-    setIsPlaying(isPlaying);
-  }, [isPlaying, setIsPlaying]);
 
   const { currentTime } = useEvent(player, "timeUpdate", {
     currentTime: player.currentTime,
@@ -57,6 +48,23 @@ export const VideoPlayer = () => {
   useEffect(() => {
     setDuration(duration);
   }, [duration, setDuration]);
+
+  const { status } = useEvent(player, "statusChange", { status: player.status });
+  const videoIsEndedCheck = useCallback(() => {
+    if(status === "idle") {
+      if(currentTime >= duration && duration > 0) setIsEnded(true)
+    }
+  }, [currentTime, duration, setIsEnded, status])
+
+  useEffect(() => {
+    setStatus(status);
+    videoIsEndedCheck()
+  }, [status, setStatus, videoIsEndedCheck]);
+
+  const { isPlaying } = useEvent(player, "playingChange", { isPlaying: player.playing });
+  useEffect(() => {
+    setIsPlaying(isPlaying);
+  }, [isPlaying, setIsPlaying]);
 
   return (
     <View className="relative items-center justify-center bg-black">
