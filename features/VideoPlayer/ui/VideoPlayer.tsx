@@ -9,6 +9,7 @@ import { FullscreenControl, PlaybackControl, SkipControl, TimeLapsControl, TimeL
 
 export const VideoPlayer = () => {
   const videoUrl = useVideoPlayerStore(state => state.videoUrl);
+  const videoFile = useVideoPlayerStore(state => state.videoFile);
   const isFullscreen = useVideoPlayerStore(state => state.isFullscreen);
 
   const setPlayer = useVideoPlayerStore(state => state.setPlayer);
@@ -18,7 +19,7 @@ export const VideoPlayer = () => {
   const setCurrentTime = useVideoPlayerStore(state => state.setCurrentTime);
   const setDuration = useVideoPlayerStore(state => state.setDuration);
 
-  const player = useVideoPlayer(videoUrl, player => {
+  const player = useVideoPlayer(videoFile, player => {
     player.loop = false;
     player.timeUpdateEventInterval = 0.1;
   });

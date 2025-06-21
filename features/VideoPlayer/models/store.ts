@@ -26,6 +26,7 @@ type VideoPlayerState = {
   setDuration: (duration: number) => void
 
   videoUrl: string
+  videoFile: any
 
   isFullscreen: boolean;
   changeFullscreen: (isFullscreen: boolean) => void;
@@ -67,6 +68,7 @@ export const useVideoPlayerStore = create<VideoPlayerState>((set, get) => ({
   setDuration: (duration: number) => set({ duration: duration }),
 
   videoUrl: "https://openings.moe/video/HigurashiNoNakuKoroNi-OP01-NCBD.mp4",
+  videoFile: require('@/assets/videos/ToriNoUta.mp4'),
 
   isFullscreen: false,
   changeFullscreen: (isFullscreen) => set({ isFullscreen: isFullscreen })
