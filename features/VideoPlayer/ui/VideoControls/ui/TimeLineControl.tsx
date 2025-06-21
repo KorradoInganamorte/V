@@ -12,8 +12,6 @@ export const TimeLineControl = () => {
   const isSliding = useVideoPlayerStore(state => state.isSliding)
   const setIsSliding = useVideoPlayerStore(state => state.setIsSliding)
 
-  const setPreviewTime = useVideoPlayerStore(state => state.setPreviewTime);
-
   return (
     <View className="w-full flex-col items-center">
       <Slider
@@ -28,10 +26,11 @@ export const TimeLineControl = () => {
           player?.pause()
           setIsSliding(true)
         }}
-        onValueChange={(value) => (isSliding) && setPreviewTime(value)}
+        onValueChange={(value) => isSliding && player?.seekBy(value - player.currentTime)}
         onSlidingComplete={value => {
-          player?.seekBy(value - currentTime)
+          player?.seekBy(value - player.currentTime)
           player?.play()
+          setIsSliding(false)
         }}
       />
     </View>

@@ -18,8 +18,6 @@ type VideoPlayerState = {
 
   currentTime: number
   setCurrentTime: (currentTime: number) => void
-  previewTime: number;
-  setPreviewTime: (previewTime: number) => void;
 
   isSliding: boolean
   setIsSliding: (isSliding: boolean) => void
@@ -61,8 +59,6 @@ export const useVideoPlayerStore = create<VideoPlayerState>((set, get) => ({
 
   currentTime: 0,
   setCurrentTime: (currentTime) => set({ currentTime: currentTime }),
-  previewTime: 0,
-  setPreviewTime: (previewTime) => set({ previewTime: previewTime }),
 
   isSliding: false,
   setIsSliding: (isSliding) => set({ isSliding: isSliding }),

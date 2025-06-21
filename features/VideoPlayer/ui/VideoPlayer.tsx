@@ -16,7 +16,6 @@ export const VideoPlayer = () => {
   const setIsPlaying = useVideoPlayerStore(state => state.setIsPlaying);
   const setIsEnded = useVideoPlayerStore(state => state.setIsEnded);
   const setCurrentTime = useVideoPlayerStore(state => state.setCurrentTime);
-  const setPreviewTime = useVideoPlayerStore(state => state.setPreviewTime);
   const setDuration = useVideoPlayerStore(state => state.setDuration);
 
   const player = useVideoPlayer(videoUrl, player => {
@@ -35,8 +34,7 @@ export const VideoPlayer = () => {
   });
   useEffect(() => {
     setCurrentTime(currentTime);
-    setPreviewTime(currentTime);
-  }, [currentTime, setCurrentTime, setPreviewTime]);
+  }, [currentTime, setCurrentTime]);
 
   const { duration } = useEvent(player, "sourceLoad", {
     duration: player.duration,
