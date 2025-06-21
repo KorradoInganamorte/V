@@ -5,7 +5,7 @@ import { useEvent } from "expo";
 import { useVideoPlayer, VideoView } from "expo-video";
 
 import { useVideoPlayerStore } from "../models/store";
-import { FullscreenControl, PlaybackControl, SkipControl, TimeLapsControl, TimeLineControl } from "./VideoControls";
+import { FullscreenControl, PlaybackControl, SettingsControl, SkipControl, TimeLapsControl, TimeLineControl } from "./VideoControls";
 
 export const VideoPlayer = () => {
   const videoUrl = useVideoPlayerStore(state => state.videoUrl);
@@ -50,7 +50,7 @@ export const VideoPlayer = () => {
     setDuration(duration);
   }, [duration, setDuration]);
 
-  const { status } = useEvent(player, "statusChange", { status: player.status });
+  const { status, error } = useEvent(player, "statusChange", { status: player.status });
   const videoIsEndedCheck = useCallback(() => {
     if (status === "idle") {
       if (currentTime >= duration && duration > 0) setIsEnded(true);
@@ -93,8 +93,8 @@ export const VideoPlayer = () => {
       </View>
 
       {status === "error" && (
-        <View className="absolute left-0 top-0 z-10 h-full w-full items-center justify-center">
-          <Text className="text-2 rounded bg-red-600/80 px-4 py-2 font-medium text-white">Произошла ошибка при загрузке видео</Text>
+        <View className="absolute left-0 top-0 z-10 h-full w-full items-center justify-center px-4">
+          <Text className="text-2 rounded bg-red-600/80 px-4 py-2 font-medium text-white">Произошла ошибка при загрузке видео {error?.message}</Text>
         </View>
       )}
 
@@ -104,6 +104,10 @@ export const VideoPlayer = () => {
 
       <View className="absolute h-full w-full items-center justify-center">
         <SkipControl />
+      </View>
+
+      <View className="absolute h-full w-full items-end justify-start">
+        <SettingsControl />
       </View>
 
       <View className={`absolute bottom-0 w-full ${isFullscreen ? "px-4" : "px-0"}`}>
