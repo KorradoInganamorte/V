@@ -30,34 +30,37 @@ export const TimeLineControl = () => {
   const isSliding = useVideoPlayerStore(state => state.isSliding);
   const setIsSliding = useVideoPlayerStore(state => state.setIsSliding);
 
+  const isFullscreen = useVideoPlayerStore(state => state.isFullscreen);
   const isOpenSettings = useVideoPlayerStore(state => state.isOpenSettings);
 
   return (
     <View className="relative min-h-[1.5rem] w-full flex-col items-center">
       <Animated.View
         style={bufferStyle}
-        className={`absolute left-[1.15rem] top-1/2 h-[0.15rem] max-w-[92.25%] -translate-y-[0.1rem]  bg-gray-500`}
+        className={`absolute left-0 top-1/2 h-[0.15rem] w-full -translate-y-[0.15rem] bg-gray-500`}
       ></Animated.View>
 
-      {!isOpenSettings && <Slider
-        style={{ width: "100%" }}
-        minimumValue={0}
-        maximumValue={duration || 1}
-        value={currentTime || 0}
-        minimumTrackTintColor="#ED0000"
-        maximumTrackTintColor="#ffffff"
-        thumbTintColor="#ED0000"
-        onSlidingStart={() => {
-          player?.pause();
-          setIsSliding(true);
-        }}
-        onValueChange={value => isSliding && player?.seekBy(value - player.currentTime)}
-        onSlidingComplete={value => {
-          player?.seekBy(value - player.currentTime);
-          player?.play();
-          setIsSliding(false);
-        }}
-      />}
+      {!isOpenSettings && (
+        <Slider
+          style={{ width: isFullscreen ? "105%" : "108%" }}
+          minimumValue={0}
+          maximumValue={duration || 1}
+          value={currentTime || 0}
+          minimumTrackTintColor="#ED0000"
+          maximumTrackTintColor="#ffffff"
+          thumbTintColor="#ED0000"
+          onSlidingStart={() => {
+            player?.pause();
+            setIsSliding(true);
+          }}
+          onValueChange={value => isSliding && player?.seekBy(value - player.currentTime)}
+          onSlidingComplete={value => {
+            player?.seekBy(value - player.currentTime);
+            player?.play();
+            setIsSliding(false);
+          }}
+        />
+      )}
     </View>
   );
 };

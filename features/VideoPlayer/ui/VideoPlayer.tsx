@@ -1,5 +1,6 @@
 import { JSX, useCallback, useEffect, useRef } from "react";
-import { Text, View } from "react-native";
+import { StatusBar, Text, View } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 import { useEvent } from "expo";
 import { useVideoPlayer, VideoView } from "expo-video";
@@ -86,7 +87,8 @@ export const VideoPlayer = () => {
   );
 
   return (
-    <View className="h-full w-full">
+    <SafeAreaView edges={isFullscreen ? [] : ['top']} className="h-full w-full">
+      <StatusBar hidden />
       <View className="relative items-center justify-center bg-black">
         <View className={`${isFullscreen ? "h-full" : "w-full"} aspect-video`}>
           <VideoView
@@ -119,7 +121,7 @@ export const VideoPlayer = () => {
           </View>
         )}
 
-        <View className="absolute h-full w-full items-center justify-center">
+        <View className="absolute h-full w-full items-center justify-center bg-black/50">
           <PlaybackControl />
         </View>
 
@@ -127,17 +129,19 @@ export const VideoPlayer = () => {
           <SkipControl />
         </View>
 
-        <View className="absolute h-full w-full items-end justify-start">
-          <SettingsControl openSettings={openSheet} />
+        <View className={`absolute h-full w-full ${isFullscreen && "px-8"} items-end justify-start`}>
+          <View className={`${!isFullscreen && "mx-4"} my-4`}>
+            <SettingsControl openSettings={openSheet} />
+          </View>
         </View>
 
-        <View className={`absolute bottom-0 w-full ${isFullscreen ? "px-4" : "px-0"}`}>
-          <View className="flex-row items-end justify-between px-4">
+        <View className={`absolute -bottom-3 w-full ${isFullscreen && "px-8 bottom-3"}`}>
+          <View className={`flex-row items-end justify-between ${isFullscreen ? "px-0 mb-2" : "px-4 mb-1"}`}>
             <TimeLapsControl />
             <FullscreenControl />
           </View>
 
-          <View className="w-full pb-1">
+          <View className="w-full">
             <TimeLineControl />
           </View>
         </View>
@@ -161,6 +165,6 @@ export const VideoPlayer = () => {
           {/* Здесь будут настройки */}
         </BottomSheetView>
       </BottomSheet>
-    </View>
+    </SafeAreaView>
   );
 };

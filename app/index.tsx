@@ -8,7 +8,7 @@ import "./global.css";
 export default function App() {
   return (
     <GestureHandlerRootView>
-      <View className="flex-1">
+      <View className="flex-1 bg-zinc-900">
         <VideoPlayer />
       </View>
     </GestureHandlerRootView>
