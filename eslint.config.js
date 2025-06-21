@@ -14,7 +14,7 @@ module.exports = defineConfig([
     },
     rules: {
       "import/order": [
-        "error",
+        "warn",
         {
           groups: [
             "builtin",

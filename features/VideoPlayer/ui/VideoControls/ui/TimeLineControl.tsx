@@ -30,14 +30,16 @@ export const TimeLineControl = () => {
   const isSliding = useVideoPlayerStore(state => state.isSliding);
   const setIsSliding = useVideoPlayerStore(state => state.setIsSliding);
 
+  const isOpenSettings = useVideoPlayerStore(state => state.isOpenSettings);
+
   return (
-    <View className="relative w-full flex-col items-center">
+    <View className="relative min-h-[1.5rem] w-full flex-col items-center">
       <Animated.View
         style={bufferStyle}
         className={`absolute left-[1.15rem] top-1/2 h-[0.15rem] max-w-[92.25%] -translate-y-[0.1rem]  bg-gray-500`}
       ></Animated.View>
 
-      <Slider
+      {!isOpenSettings && <Slider
         style={{ width: "100%" }}
         minimumValue={0}
         maximumValue={duration || 1}
@@ -55,7 +57,7 @@ export const TimeLineControl = () => {
           player?.play();
           setIsSliding(false);
         }}
-      />
+      />}
     </View>
   );
 };

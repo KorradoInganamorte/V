@@ -1,14 +1,17 @@
-import { useCallback, useEffect } from "react";
+import { JSX, useCallback, useEffect, useRef } from "react";
 import { Text, View } from "react-native";
 
 import { useEvent } from "expo";
 import { useVideoPlayer, VideoView } from "expo-video";
 
+import BottomSheet, { BottomSheetBackdrop, BottomSheetView } from "@gorhom/bottom-sheet";
+import { BottomSheetDefaultBackdropProps } from "@gorhom/bottom-sheet/lib/typescript/components/bottomSheetBackdrop/types";
+
 import { useVideoPlayerStore } from "../models/store";
 import { FullscreenControl, PlaybackControl, SettingsControl, SkipControl, TimeLapsControl, TimeLineControl } from "./VideoControls";
 
 export const VideoPlayer = () => {
-  const videoUrl = useVideoPlayerStore(state => state.videoUrl);
+  // const videoUrl = useVideoPlayerStore(state => state.videoUrl);
   const videoFile = useVideoPlayerStore(state => state.videoFile);
   const isFullscreen = useVideoPlayerStore(state => state.isFullscreen);
 
@@ -19,6 +22,7 @@ export const VideoPlayer = () => {
   const setCurrentTime = useVideoPlayerStore(state => state.setCurrentTime);
   const setBufferedPosition = useVideoPlayerStore(state => state.setBufferedPosition);
   const setDuration = useVideoPlayerStore(state => state.setDuration);
+  const setIsOpenSettings = useVideoPlayerStore(state => state.setIsOpenSettings);
 
   const player = useVideoPlayer(videoFile, player => {
     player.loop = false;
@@ -67,59 +71,96 @@ export const VideoPlayer = () => {
     setIsPlaying(isPlaying);
   }, [isPlaying, setIsPlaying]);
 
+  const bottomSheetRef = useRef<BottomSheet>(null);
+
+  const openSheet = useCallback(() => {
+    bottomSheetRef.current?.expand();
+    setIsOpenSettings(true)
+  }, [setIsOpenSettings]);
+
+  const renderBackdrop = useCallback(
+    (props: JSX.IntrinsicAttributes & BottomSheetDefaultBackdropProps) => (
+      <BottomSheetBackdrop {...props} disappearsOnIndex={0} appearsOnIndex={1} />
+    ),
+    []
+  );
+
   return (
-    <View className="relative items-center justify-center bg-black">
-      <View className={`${isFullscreen ? "h-full" : "w-full"} aspect-video`}>
-        <VideoView
-          style={
-            isFullscreen
-              ? {
-                  width: "100%",
-                  height: "100%",
-                  backgroundColor: "rgba(0, 0, 0, 1)",
-                  borderRadius: 6,
-                }
-              : {
-                  width: "100%",
-                  height: "100%",
-                  backgroundColor: "rgba(0, 0, 0, 0.85)",
-                }
-          }
-          player={player}
-          allowsFullscreen
-          allowsPictureInPicture
-          nativeControls={false}
-        />
-      </View>
-
-      {status === "error" && (
-        <View className="absolute left-0 top-0 z-10 h-full w-full items-center justify-center px-4">
-          <Text className="text-2 rounded bg-red-600/80 px-4 py-2 font-medium text-white">Произошла ошибка при загрузке видео {error?.message}</Text>
-        </View>
-      )}
-
-      <View className="absolute h-full w-full items-center justify-center">
-        <PlaybackControl />
-      </View>
-
-      <View className="absolute h-full w-full items-center justify-center">
-        <SkipControl />
-      </View>
-
-      <View className="absolute h-full w-full items-end justify-start">
-        <SettingsControl />
-      </View>
-
-      <View className={`absolute bottom-0 w-full ${isFullscreen ? "px-4" : "px-0"}`}>
-        <View className="flex-row items-end justify-between px-4">
-          <TimeLapsControl />
-          <FullscreenControl />
+    <View className="h-full w-full">
+      <View className="relative items-center justify-center bg-black">
+        <View className={`${isFullscreen ? "h-full" : "w-full"} aspect-video`}>
+          <VideoView
+            style={
+              isFullscreen
+                ? {
+                    width: "100%",
+                    height: "100%",
+                    backgroundColor: "rgba(0, 0, 0, 1)",
+                    borderRadius: 6,
+                  }
+                : {
+                    width: "100%",
+                    height: "100%",
+                    backgroundColor: "rgba(0, 0, 0, 0.85)",
+                  }
+            }
+            player={player}
+            allowsFullscreen
+            allowsPictureInPicture
+            nativeControls={false}
+          />
         </View>
 
-        <View className="w-full pb-1">
-          <TimeLineControl />
+        {status === "error" && (
+          <View className="absolute left-0 top-0 z-10 h-full w-full items-center justify-center px-4">
+            <Text className="text-2 rounded bg-red-600/80 px-4 py-2 font-medium text-white">
+              Произошла ошибка при загрузке видео {error?.message}
+            </Text>
+          </View>
+        )}
+
+        <View className="absolute h-full w-full items-center justify-center">
+          <PlaybackControl />
+        </View>
+
+        <View className="absolute h-full w-full items-center justify-center">
+          <SkipControl />
+        </View>
+
+        <View className="absolute h-full w-full items-end justify-start">
+          <SettingsControl openSettings={openSheet} />
+        </View>
+
+        <View className={`absolute bottom-0 w-full ${isFullscreen ? "px-4" : "px-0"}`}>
+          <View className="flex-row items-end justify-between px-4">
+            <TimeLapsControl />
+            <FullscreenControl />
+          </View>
+
+          <View className="w-full pb-1">
+            <TimeLineControl />
+          </View>
         </View>
       </View>
+
+      <BottomSheet
+        ref={bottomSheetRef}
+        index={-1}
+        snapPoints={["30%"]}
+        enablePanDownToClose
+        onAnimate={(fromIndex, toIndex) => {
+          if (toIndex === -1) setIsOpenSettings(false);
+          else setIsOpenSettings(true);
+        }}
+        backgroundStyle={{ backgroundColor: "#363636" }}
+        handleIndicatorStyle={{ backgroundColor: "#aaa" }}
+        backdropComponent={renderBackdrop}
+      >
+        <BottomSheetView className="flex-1 px-4">
+          <Text></Text>
+          {/* Здесь будут настройки */}
+        </BottomSheetView>
+      </BottomSheet>
     </View>
   );
 };
