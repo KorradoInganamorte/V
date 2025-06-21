@@ -19,6 +19,9 @@ type VideoPlayerState = {
   currentTime: number
   setCurrentTime: (currentTime: number) => void
 
+  bufferedPosition: number
+  setBufferedPosition: (bufferedPosition: number) => void
+
   isSliding: boolean
   setIsSliding: (isSliding: boolean) => void
 
@@ -63,6 +66,9 @@ export const useVideoPlayerStore = create<VideoPlayerState>((set, get) => ({
 
   isSliding: false,
   setIsSliding: (isSliding) => set({ isSliding: isSliding }),
+
+  bufferedPosition: 0,
+  setBufferedPosition: (bufferedPosition) => set({ bufferedPosition: bufferedPosition }),
 
   duration: 0,
   setDuration: (duration: number) => set({ duration: duration }),

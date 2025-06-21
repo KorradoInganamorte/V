@@ -17,17 +17,18 @@ export const VideoPlayer = () => {
   const setIsPlaying = useVideoPlayerStore(state => state.setIsPlaying);
   const setIsEnded = useVideoPlayerStore(state => state.setIsEnded);
   const setCurrentTime = useVideoPlayerStore(state => state.setCurrentTime);
+  const setBufferedPosition = useVideoPlayerStore(state => state.setBufferedPosition);
   const setDuration = useVideoPlayerStore(state => state.setDuration);
 
   const player = useVideoPlayer(videoFile, player => {
     player.loop = false;
-    player.timeUpdateEventInterval = 0.1;
+    player.timeUpdateEventInterval = 1;
   });
   useEffect(() => {
     setPlayer(player);
   }, [player, setPlayer]);
 
-  const { currentTime } = useEvent(player, "timeUpdate", {
+  const { currentTime, bufferedPosition } = useEvent(player, "timeUpdate", {
     currentTime: player.currentTime,
     currentLiveTimestamp: null,
     currentOffsetFromLive: null,
@@ -35,7 +36,8 @@ export const VideoPlayer = () => {
   });
   useEffect(() => {
     setCurrentTime(currentTime);
-  }, [currentTime, setCurrentTime]);
+    setBufferedPosition(bufferedPosition);
+  }, [bufferedPosition, currentTime, setBufferedPosition, setCurrentTime]);
 
   const { duration } = useEvent(player, "sourceLoad", {
     duration: player.duration,
@@ -50,14 +52,14 @@ export const VideoPlayer = () => {
 
   const { status } = useEvent(player, "statusChange", { status: player.status });
   const videoIsEndedCheck = useCallback(() => {
-    if(status === "idle") {
-      if(currentTime >= duration && duration > 0) setIsEnded(true)
+    if (status === "idle") {
+      if (currentTime >= duration && duration > 0) setIsEnded(true);
     }
-  }, [currentTime, duration, setIsEnded, status])
+  }, [currentTime, duration, setIsEnded, status]);
 
   useEffect(() => {
     setStatus(status);
-    videoIsEndedCheck()
+    videoIsEndedCheck();
   }, [status, setStatus, videoIsEndedCheck]);
 
   const { isPlaying } = useEvent(player, "playingChange", { isPlaying: player.playing });
