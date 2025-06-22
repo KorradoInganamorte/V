@@ -15,7 +15,7 @@ export const SettingsControl = ({ openSettings }: SettingsControlProps) => {
   return (
       <View className="h-8 w-8">
         <TouchableOpacity onPress={openSettings} className="h-full w-full items-center justify-center">
-          <SettingsIcon name="settings-outline" size={isFullscreen ? 26 : 22} color="white" />
+          <SettingsIcon name="settings-outline" size={isFullscreen ? 26 : 20} color="white" />
         </TouchableOpacity>
       </View>
   );

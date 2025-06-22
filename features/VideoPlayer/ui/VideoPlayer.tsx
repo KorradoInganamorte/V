@@ -27,7 +27,7 @@ export const VideoPlayer = () => {
 
   const player = useVideoPlayer(videoFile, player => {
     player.loop = false;
-    player.timeUpdateEventInterval = 1;
+    player.timeUpdateEventInterval = 0.1;
   });
   useEffect(() => {
     setPlayer(player);
@@ -129,20 +129,18 @@ export const VideoPlayer = () => {
         </View>
 
         <View className={`absolute h-full w-full ${isFullscreen && "px-8"} items-end justify-start`}>
-          <View className={`${!isFullscreen && "mx-4"} my-4`}>
+          <View className={`${!isFullscreen ? "mx-4 mt-2" : "mt-4"}`}>
             <SettingsControl openSettings={openSheet} />
           </View>
         </View>
 
-        <View className={`absolute -bottom-3 w-full ${isFullscreen && "bottom-3 px-8"}`}>
-          <View className={`flex-row items-end justify-between ${isFullscreen ? "mb-2 px-0" : "mb-1 px-4"}`}>
+        <View className={`absolute bottom-0 w-full ${isFullscreen && "bottom-3 px-8"}`}>
+          <View className={`flex-row items-center justify-between ${isFullscreen ? "mb-2 px-0" : "mb-1 px-4"}`}>
             <TimeLapsControl />
             <FullscreenControl />
           </View>
 
-          <View className="w-full">
-            <TimeLineControl />
-          </View>
+          <TimeLineControl />
         </View>
       </View>
 

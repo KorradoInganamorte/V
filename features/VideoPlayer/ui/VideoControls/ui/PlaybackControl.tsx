@@ -16,7 +16,7 @@ export const PlaybackControl = () => {
   const isFullscreen = useVideoPlayerStore(state => state.isFullscreen);
 
   return (
-    <View className={`${isFullscreen ? "h-16 w-16" : "h-12 w-12"} rounded-full bg-black/40`}>
+    <View className={`${isFullscreen ? "h-20 w-20" : "h-14 w-14"} rounded-full bg-black/40`}>
       {status === "readyToPlay" ? (
         isPlaying ? (
           <TouchableOpacity onPress={onPlayback} className="flex h-full w-full items-center justify-center">

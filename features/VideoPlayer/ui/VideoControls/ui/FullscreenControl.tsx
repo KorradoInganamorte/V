@@ -36,7 +36,7 @@ export const FullscreenControl = () => {
 
   return (
     <TouchableOpacity className="flex h-8 w-8 items-center justify-center" onPress={() => (isFullscreen ? onExitFullscreen() : onEnterFullscreen())}>
-      {isFullscreen ? <CollapseIcon name="arrow-collapse" size={24} color="white" /> : <ExpandIcon name="expand" size={16} color="white" />}
+      {isFullscreen ? <CollapseIcon name="arrow-collapse" size={24} color="white" /> : <ExpandIcon name="expand" size={14} color="white" />}
     </TouchableOpacity>
   );
 };
