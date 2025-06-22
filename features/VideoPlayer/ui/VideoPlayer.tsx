@@ -1,5 +1,5 @@
 import { JSX, useCallback, useEffect, useRef } from "react";
-import { StatusBar, Text, View } from "react-native";
+import { Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 import { useEvent } from "expo";
@@ -88,7 +88,6 @@ export const VideoPlayer = () => {
 
   return (
     <SafeAreaView edges={isFullscreen ? [] : ['top']} className="h-full w-full">
-      <StatusBar hidden />
       <View className="relative items-center justify-center bg-black">
         <View className={`${isFullscreen ? "h-full" : "w-full"} aspect-video`}>
           <VideoView
@@ -135,8 +134,8 @@ export const VideoPlayer = () => {
           </View>
         </View>
 
-        <View className={`absolute -bottom-3 w-full ${isFullscreen && "px-8 bottom-3"}`}>
-          <View className={`flex-row items-end justify-between ${isFullscreen ? "px-0 mb-2" : "px-4 mb-1"}`}>
+        <View className={`absolute -bottom-3 w-full ${isFullscreen && "bottom-3 px-8"}`}>
+          <View className={`flex-row items-end justify-between ${isFullscreen ? "mb-2 px-0" : "mb-1 px-4"}`}>
             <TimeLapsControl />
             <FullscreenControl />
           </View>

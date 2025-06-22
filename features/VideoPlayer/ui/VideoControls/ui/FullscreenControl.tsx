@@ -1,5 +1,6 @@
-import { TouchableOpacity } from "react-native";
+import { StatusBar, TouchableOpacity } from "react-native";
 
+import * as NavigationBar from 'expo-navigation-bar';
 import * as ScreenOrientation from "expo-screen-orientation";
 
 import ExpandIcon from "@expo/vector-icons/FontAwesome6";
@@ -13,11 +14,23 @@ export const FullscreenControl = () => {
   
   const onEnterFullscreen = async () => {
     await changeScreenOrientation(ScreenOrientation.OrientationLock.LANDSCAPE_RIGHT);
+    await NavigationBar.setVisibilityAsync('hidden');
+
+    setTimeout(() => {
+      StatusBar.setHidden(true, 'fade');
+    }, 100)
+
     changeFullscreen(true);
   };
 
   const onExitFullscreen = async () => {
     await changeScreenOrientation(ScreenOrientation.OrientationLock.PORTRAIT_UP);
+    await NavigationBar.setVisibilityAsync('visible');
+
+    setTimeout(() => {
+      StatusBar.setHidden(false, 'fade');
+    }, 100)
+
     changeFullscreen(false);
   };
 
