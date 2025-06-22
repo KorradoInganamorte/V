@@ -1,5 +1,5 @@
 import { JSX, useCallback, useEffect, useRef } from "react";
-import { Text, View } from "react-native";
+import { Text, TouchableOpacity, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 import { useEvent } from "expo";
@@ -153,12 +153,14 @@ export const VideoPlayer = () => {
           if (toIndex === -1) setIsOpenSettings(false);
           else setIsOpenSettings(true);
         }}
-        backgroundStyle={{ backgroundColor: "#363636" }}
-        handleIndicatorStyle={{ backgroundColor: "#aaa" }}
+        backgroundStyle={{ backgroundColor: "#1a1a1a" }}
+        handleIndicatorStyle={{ backgroundColor: "#383838" }}
         backdropComponent={renderBackdrop}
       >
-        <BottomSheetView className="flex-1 px-4">
-          <Text></Text>
+        <BottomSheetView className="flex-1 px-8 py-2">
+          <TouchableOpacity className="flex flex-row items-center justify-between">
+            <Text className="font-montserrat-medium text-lg text-white">Повтор воиспроизведения</Text>
+          </TouchableOpacity>
           {/* Здесь будут настройки */}
         </BottomSheetView>
       </BottomSheet>

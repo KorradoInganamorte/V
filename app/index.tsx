@@ -2,7 +2,7 @@ import { useEffect } from "react";
 import { StatusBar, View } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 
-import * as Font from 'expo-font';
+import { useFonts } from 'expo-font';
 import * as SplashScreen from 'expo-splash-screen';
 import * as SystemUI from 'expo-system-ui';
 import { Ionicons, MaterialCommunityIcons, FontAwesome6, MaterialIcons, Fontisto, FontAwesome5 } from '@expo/vector-icons';
@@ -12,23 +12,28 @@ import { VideoPlayer } from "@/features/VideoPlayer";
 import "./global.css";
 
 SystemUI.setBackgroundColorAsync('black');
+SplashScreen.preventAutoHideAsync();
 
 export default function App() {
+  const [loaded, error] = useFonts({
+    ...Ionicons.font,
+    ...MaterialCommunityIcons.font,
+    ...FontAwesome5.font,
+    ...FontAwesome6.font,
+    ...MaterialIcons.font,
+    ...Fontisto.font,
+
+    'Montserrat-Bold': require('@/assets/fonts/Montserrat-Bold.ttf'),
+    'Montserrat-Medium': require('@/assets/fonts/Montserrat-Medium.ttf'),
+    'Montserrat-Regular': require('@/assets/fonts/Montserrat-Regular.ttf'),
+    'Montserrat-Light': require('@/assets/fonts/Montserrat-Light.ttf'),
+  });
+
   useEffect(() => {
-    async function prepare() {
-      await SplashScreen.preventAutoHideAsync();
-      await Font.loadAsync({
-        ...Ionicons.font,
-        ...MaterialCommunityIcons.font,
-        ...FontAwesome6,
-        ...FontAwesome5,
-        ...MaterialIcons.font,
-        ...Fontisto.font
-      });
-      await SplashScreen.hideAsync();
+    if (loaded || error) {
+      SplashScreen.hideAsync();
     }
-    prepare();
-  }, []);
+  }, [loaded, error]);
 
   return (
     <GestureHandlerRootView>
