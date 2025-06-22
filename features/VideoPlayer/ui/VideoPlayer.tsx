@@ -27,7 +27,7 @@ export const VideoPlayer = () => {
 
   const player = useVideoPlayer(videoFile, player => {
     player.loop = false;
-    player.timeUpdateEventInterval = 0.1;
+    player.timeUpdateEventInterval = 1;
   });
   useEffect(() => {
     setPlayer(player);
