@@ -1,5 +1,6 @@
 import React, { JSX, useCallback, useEffect, useRef, useState } from "react";
 import { Text, TouchableOpacity, View } from "react-native";
+import Animated, { useAnimatedStyle, useSharedValue, withTiming } from "react-native-reanimated";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 import { useEvent } from "expo";
@@ -10,7 +11,6 @@ import { BottomSheetDefaultBackdropProps } from "@gorhom/bottom-sheet/lib/typesc
 
 import { useVideoPlayerStore } from "../models/store";
 import { FullscreenControl, PlaybackControl, SettingsControl, SkipControl, TimeLapsControl, TimeLineControl } from "./VideoControls";
-import Animated, { useAnimatedStyle, useSharedValue, withTiming } from "react-native-reanimated";
 
 export const VideoPlayer = () => {
   const hideControlsTimeout = useRef<number | null>(null);
@@ -198,7 +198,7 @@ export const VideoPlayer = () => {
           </Animated.View>
         </TouchableOpacity>
 
-        <View className={`absolute bottom-0 w-full ${isFullscreen && "bottom-3 px-8"}`}>
+        <View className={`absolute -bottom-1 w-full ${isFullscreen && "bottom-3 px-8"}`}>
           <Animated.View pointerEvents={isVisibleControls ? "auto" : "none"} style={[{ flex: 1 }, controlsAnimatedStyle]}>
             <View className={`flex-row items-center justify-between ${isFullscreen ? "mb-2 px-0" : "mb-1 px-4"}`}>
               <TimeLapsControl />
@@ -206,7 +206,7 @@ export const VideoPlayer = () => {
             </View>
           </Animated.View>
 
-          {(!isFullscreen || isVisibleControls) && <TimeLineControl />}
+          <TimeLineControl />
         </View>
       </View>
 
@@ -215,9 +215,9 @@ export const VideoPlayer = () => {
         index={-1}
         snapPoints={["30%"]}
         enablePanDownToClose
+        onClose={() => setIsOpenSettings(false)}
         onAnimate={(fromIndex, toIndex) => {
-          if (toIndex === -1) setIsOpenSettings(false);
-          else setIsOpenSettings(true);
+          setIsOpenSettings(toIndex !== -1);
         }}
         animationConfigs={{
           damping: 120,

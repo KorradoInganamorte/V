@@ -1,13 +1,10 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { Platform, View } from "react-native";
 import Animated, {
   useSharedValue,
   withTiming,
   useAnimatedStyle,
   Easing,
-  interpolateColor,
-  runOnJS,
-  useAnimatedReaction,
 } from "react-native-reanimated";
 
 import Slider from "@react-native-community/slider";
@@ -22,6 +19,8 @@ export const TimeLineControl = () => {
   const bufferedPosition = useVideoPlayerStore(state => state.bufferedPosition);
   const duration = useVideoPlayerStore(state => state.duration);
 
+  const isFullscreen = useVideoPlayerStore(state => state.isFullscreen);
+
   const isSliding = useVideoPlayerStore(state => state.isSliding);
   const setIsSliding = useVideoPlayerStore(state => state.setIsSliding);
 
@@ -31,11 +30,11 @@ export const TimeLineControl = () => {
   const bufferWidth = useSharedValue(0);
   const progressWidth = useSharedValue(0);
 
-  // const [bufferVisible, setBufferVisible] = useState<string>("#E11D48");
-  // const bufferVisibleAnimated = useSharedValue(0);
+  const controlsOpacity = useSharedValue(isVisibleControls ? 1 : 0);
 
-  const [thumbVisible, setThumbVisible] = useState<string>("#E11D48");
-  const thumbVisibleAnimated = useSharedValue(0);
+  useEffect(() => {
+    controlsOpacity.value = withTiming(isVisibleControls ? 1 : 0, { duration: 250 });
+  }, [isVisibleControls]);
 
   useEffect(() => {
     const ration = bufferedPosition / duration;
@@ -53,6 +52,10 @@ export const TimeLineControl = () => {
     });
   }, [currentTime, duration, progressWidth]);
 
+  const controlsAnimatedStyle = useAnimatedStyle(() => ({
+    opacity: controlsOpacity.value,
+  }));
+
   const bufferStyle = useAnimatedStyle(() => ({
     width: `${bufferWidth.value * 100}%`,
   }));
@@ -61,27 +64,15 @@ export const TimeLineControl = () => {
     width: `${progressWidth.value * 100}%`,
   }));
 
-  useAnimatedReaction(
-    () => thumbVisibleAnimated.value,
-    value => {
-      const color = interpolateColor(value, [0, 1], ["#E11D48", "transparent"]);
-      runOnJS(setThumbVisible)(color);
-    },
-    [thumbVisibleAnimated]
-  );
-
-  useEffect(() => {
-    if(isOpenSettings || !isVisibleControls) thumbVisibleAnimated.value = withTiming(1, { duration: 0 });
-    else thumbVisibleAnimated.value = withTiming(0, { duration: 0 });
-  }, [isOpenSettings, isVisibleControls])
-
   return (
     <View className="relative w-full">
-      {isVisibleControls && <Animated.View style={bufferStyle} className="absolute left-0 top-1/2 h-[0.15rem] w-full -translate-y-1/2 bg-gray-500"></Animated.View>}
+      {!isFullscreen && <View className="absolute left-0 top-1/2 h-[0.15rem] w-full -translate-y-1/2 bg-zinc-700"></View>}
 
-      <Animated.View style={progressStyle} className={`absolute left-0 top-1/2 h-[0.15rem] w-full -translate-y-1/2 ${isVisibleControls ? "bg-rose-600" : "bg-white"}`} />
+      {isVisibleControls && <Animated.View style={bufferStyle} className="absolute left-0 top-1/2 h-[0.15rem] w-full -translate-y-1/2 bg-zinc-400"></Animated.View>}
 
-      <View className="absolute top-1/2 flex h-[0.15rem] w-full -translate-y-1/2 justify-center">
+      {!isFullscreen && <Animated.View style={progressStyle} className={`absolute left-0 top-1/2 h-[0.15rem] w-full -translate-y-1/2 ${isVisibleControls ? "bg-rose-600" : "bg-slate-200"}`} />}
+
+      <Animated.View style={[{ flex: 1 }, controlsAnimatedStyle]} className="absolute top-1/2 flex h-[2rem] w-full -translate-y-1/2 justify-center">
         <Slider
           style={{
             marginLeft: Platform.select({ ios: 0, android: -15 }),
@@ -93,8 +84,8 @@ export const TimeLineControl = () => {
           value={currentTime}
           step={0.1}
           minimumTrackTintColor={isVisibleControls ? "#e11d48" : "#ffffff"}
-          maximumTrackTintColor="#ffffff"
-          thumbTintColor={thumbVisible}
+          maximumTrackTintColor="#737373"
+          thumbTintColor={isOpenSettings ? "transparent" : "#e11d48"}
           onSlidingStart={() => {
             player?.pause();
             setIsSliding(true);
@@ -110,7 +101,7 @@ export const TimeLineControl = () => {
             setIsSliding(false);
           }}
         />
-      </View>
+      </Animated.View>
     </View>
   );
 };
