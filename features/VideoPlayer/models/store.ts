@@ -34,6 +34,9 @@ type VideoPlayerState = {
   isFullscreen: boolean;
   changeFullscreen: (isFullscreen: boolean) => void;
 
+  isVisibleControls: boolean
+  setIsVisibleControls: (isVisibleControls: boolean) => void
+
   isOpenSettings: boolean
   setIsOpenSettings: (isOpenSettings: boolean) => void
 };
@@ -80,7 +83,10 @@ export const useVideoPlayerStore = create<VideoPlayerState>((set, get) => ({
   videoFile: require('@/assets/videos/ToriNoUta.mp4'),
 
   isFullscreen: false,
-  changeFullscreen: (isFullscreen) => set({ isFullscreen: isFullscreen }),
+  changeFullscreen: (isFullscreen: boolean) => set({ isFullscreen: isFullscreen }),
+
+  isVisibleControls: false,
+  setIsVisibleControls: (isVisibleControls: boolean) => set({ isVisibleControls: isVisibleControls }),
 
   isOpenSettings: false,
   setIsOpenSettings: (isOpenSettings: boolean) => set({ isOpenSettings: isOpenSettings })

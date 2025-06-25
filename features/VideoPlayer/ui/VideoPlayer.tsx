@@ -1,4 +1,4 @@
-import { JSX, useCallback, useEffect, useRef, useState } from "react";
+import React, { JSX, useCallback, useEffect, useRef, useState } from "react";
 import { Text, TouchableOpacity, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
@@ -16,7 +16,10 @@ export const VideoPlayer = () => {
   const videoFile = useVideoPlayerStore(state => state.videoFile);
   const isFullscreen = useVideoPlayerStore(state => state.isFullscreen);
 
-  const [isRepeatable, setIsRepeatable] = useState<boolean>(false)
+  const [isRepeatable, setIsRepeatable] = useState<boolean>(false);
+
+  const isVisibleControls = useVideoPlayerStore(state => state.isVisibleControls);
+  const setIsVisibleControls = useVideoPlayerStore(state => state.setIsVisibleControls);
 
   const setPlayer = useVideoPlayerStore(state => state.setPlayer);
   const setStatus = useVideoPlayerStore(state => state.setStatus);
@@ -83,7 +86,7 @@ export const VideoPlayer = () => {
 
   const openSheet = useCallback(() => {
     bottomSheetRef.current?.expand();
-    setIsOpenSettings(true)
+    setIsOpenSettings(true);
   }, [setIsOpenSettings]);
 
   const renderBackdrop = useCallback(
@@ -94,7 +97,7 @@ export const VideoPlayer = () => {
   );
 
   return (
-    <SafeAreaView edges={isFullscreen ? [] : ['top']} className="h-full w-full">
+    <SafeAreaView edges={isFullscreen ? [] : ["top"]} className="h-full w-full">
       <View className="relative items-center justify-center bg-black">
         <View className={`${isFullscreen ? "h-full" : "w-full"} aspect-video`}>
           <VideoView
@@ -119,33 +122,44 @@ export const VideoPlayer = () => {
           />
         </View>
 
-        {status === "error" && (
-          <View className="absolute left-0 top-0 z-10 h-full w-full items-center justify-center px-4">
-            <Text className="text-2 rounded bg-red-600/80 px-4 py-2 font-medium text-white">
-              Произошла ошибка при загрузке видео {error?.message}
-            </Text>
-          </View>
-        )}
+        <TouchableOpacity
+          onPress={() => setIsVisibleControls(!isVisibleControls)}
+          className={`absolute h-full w-full ${isVisibleControls ? "bg-black/50" : "bg-transparent"}`}
+        >
+          {isVisibleControls && (
+            <>
+              {status === "error" && (
+                <View className="absolute left-0 top-0 z-10 h-full w-full items-center justify-center px-4">
+                  <Text className="text-2 rounded bg-red-600/80 px-4 py-2 font-medium text-white">
+                    Произошла ошибка при загрузке видео {error?.message}
+                  </Text>
+                </View>
+              )}
 
-        <View className="absolute h-full w-full items-center justify-center bg-black/50">
-          <PlaybackControl />
-        </View>
+              <View className="absolute h-full w-full items-center justify-center">
+                <PlaybackControl />
+              </View>
 
-        <View className="absolute h-full w-full items-center justify-center">
-          <SkipControl />
-        </View>
+              <View className="absolute h-full w-full items-center justify-center">
+                <SkipControl />
+              </View>
 
-        <View className={`absolute h-full w-full ${isFullscreen && "px-8"} items-end justify-start`}>
-          <View className={`${!isFullscreen ? "mx-4 mt-2" : "mt-4"}`}>
-            <SettingsControl openSettings={openSheet} />
-          </View>
-        </View>
+              <View className={`absolute h-full w-full ${isFullscreen && "px-8"} items-end justify-start`}>
+                <View className={`${!isFullscreen ? "mx-4 mt-2" : "mt-4"}`}>
+                  <SettingsControl openSettings={openSheet} />
+                </View>
+              </View>
+            </>
+          )}
+        </TouchableOpacity>
 
         <View className={`absolute bottom-0 w-full ${isFullscreen && "bottom-3 px-8"}`}>
-          <View className={`flex-row items-center justify-between ${isFullscreen ? "mb-2 px-0" : "mb-1 px-4"}`}>
-            <TimeLapsControl />
-            <FullscreenControl />
-          </View>
+          {isVisibleControls && (
+            <View className={`flex-row items-center justify-between ${isFullscreen ? "mb-2 px-0" : "mb-1 px-4"}`}>
+              <TimeLapsControl />
+              <FullscreenControl />
+            </View>
+          )}
 
           <TimeLineControl />
         </View>
@@ -162,7 +176,7 @@ export const VideoPlayer = () => {
         }}
         animationConfigs={{
           damping: 120,
-          stiffness: 100
+          stiffness: 100,
         }}
         backgroundStyle={{ backgroundColor: "#1a1a1a" }}
         handleIndicatorStyle={{ backgroundColor: "#383838" }}

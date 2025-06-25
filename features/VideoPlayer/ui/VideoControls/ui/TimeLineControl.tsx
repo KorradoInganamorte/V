@@ -25,17 +25,20 @@ export const TimeLineControl = () => {
   const isSliding = useVideoPlayerStore(state => state.isSliding);
   const setIsSliding = useVideoPlayerStore(state => state.setIsSliding);
 
+  const isVisibleControls = useVideoPlayerStore(state => state.isVisibleControls);
   const isOpenSettings = useVideoPlayerStore(state => state.isOpenSettings);
 
   const bufferWidth = useSharedValue(0);
   const progressWidth = useSharedValue(0);
 
-  const [trackColor, setTrackColor] = useState<string>("#E11D48");
-  const progressColorAnimated = useSharedValue(0);
+  // const [bufferVisible, setBufferVisible] = useState<string>("#E11D48");
+  // const bufferVisibleAnimated = useSharedValue(0);
+
+  const [thumbVisible, setThumbVisible] = useState<string>("#E11D48");
+  const thumbVisibleAnimated = useSharedValue(0);
 
   useEffect(() => {
     const ration = bufferedPosition / duration;
-
     bufferWidth.value = withTiming(ration, {
       duration: 2000,
       easing: Easing.out(Easing.exp),
@@ -59,24 +62,24 @@ export const TimeLineControl = () => {
   }));
 
   useAnimatedReaction(
-    () => progressColorAnimated.value,
+    () => thumbVisibleAnimated.value,
     value => {
       const color = interpolateColor(value, [0, 1], ["#E11D48", "transparent"]);
-      runOnJS(setTrackColor)(color);
+      runOnJS(setThumbVisible)(color);
     },
-    [progressColorAnimated]
+    [thumbVisibleAnimated]
   );
 
   useEffect(() => {
-    if(isOpenSettings) progressColorAnimated.value = withTiming(1, { duration: 200 });
-    else progressColorAnimated.value = withTiming(0, { duration: 400 });
-  }, [isOpenSettings])
+    if(isOpenSettings || !isVisibleControls) thumbVisibleAnimated.value = withTiming(1, { duration: 200 });
+    else thumbVisibleAnimated.value = withTiming(0, { duration: 400 });
+  }, [isOpenSettings, isVisibleControls])
 
   return (
     <View className="relative w-full">
-      <Animated.View style={bufferStyle} className="absolute left-0 top-1/2 h-[0.2rem] w-full -translate-y-1/2 bg-gray-500"></Animated.View>
+      {isVisibleControls && <Animated.View style={bufferStyle} className="absolute left-0 top-1/2 h-[0.2rem] w-full -translate-y-1/2 bg-gray-500"></Animated.View>}
 
-      <Animated.View style={progressStyle} className="absolute left-0 top-1/2 h-[0.2rem] w-full -translate-y-1/2 bg-rose-600" />
+      <Animated.View style={progressStyle} className={`absolute left-0 top-1/2 h-[0.1rem] w-full -translate-y-1/2 ${isVisibleControls ? "bg-rose-600" : "bg-white"}`} />
 
       <View className="absolute top-1/2 flex h-[1rem] w-full -translate-y-1/2 justify-center">
         <Slider
@@ -89,9 +92,9 @@ export const TimeLineControl = () => {
           maximumValue={duration}
           value={currentTime}
           step={0.1}
-          minimumTrackTintColor="#e11d48"
+          minimumTrackTintColor={isVisibleControls ? "#e11d48" : "ffffff"}
           maximumTrackTintColor="#ffffff"
-          thumbTintColor={trackColor}
+          thumbTintColor={thumbVisible}
           onSlidingStart={() => {
             player?.pause();
             setIsSliding(true);
