@@ -71,17 +71,17 @@ export const TimeLineControl = () => {
   );
 
   useEffect(() => {
-    if(isOpenSettings || !isVisibleControls) thumbVisibleAnimated.value = withTiming(1, { duration: 200 });
-    else thumbVisibleAnimated.value = withTiming(0, { duration: 400 });
+    if(isOpenSettings || !isVisibleControls) thumbVisibleAnimated.value = withTiming(1, { duration: 0 });
+    else thumbVisibleAnimated.value = withTiming(0, { duration: 0 });
   }, [isOpenSettings, isVisibleControls])
 
   return (
     <View className="relative w-full">
-      {isVisibleControls && <Animated.View style={bufferStyle} className="absolute left-0 top-1/2 h-[0.2rem] w-full -translate-y-1/2 bg-gray-500"></Animated.View>}
+      {isVisibleControls && <Animated.View style={bufferStyle} className="absolute left-0 top-1/2 h-[0.15rem] w-full -translate-y-1/2 bg-gray-500"></Animated.View>}
 
-      <Animated.View style={progressStyle} className={`absolute left-0 top-1/2 h-[0.1rem] w-full -translate-y-1/2 ${isVisibleControls ? "bg-rose-600" : "bg-white"}`} />
+      <Animated.View style={progressStyle} className={`absolute left-0 top-1/2 h-[0.15rem] w-full -translate-y-1/2 ${isVisibleControls ? "bg-rose-600" : "bg-white"}`} />
 
-      <View className="absolute top-1/2 flex h-[1rem] w-full -translate-y-1/2 justify-center">
+      <View className="absolute top-1/2 flex h-[0.15rem] w-full -translate-y-1/2 justify-center">
         <Slider
           style={{
             marginLeft: Platform.select({ ios: 0, android: -15 }),
@@ -92,7 +92,7 @@ export const TimeLineControl = () => {
           maximumValue={duration}
           value={currentTime}
           step={0.1}
-          minimumTrackTintColor={isVisibleControls ? "#e11d48" : "ffffff"}
+          minimumTrackTintColor={isVisibleControls ? "#e11d48" : "#ffffff"}
           maximumTrackTintColor="#ffffff"
           thumbTintColor={thumbVisible}
           onSlidingStart={() => {

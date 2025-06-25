@@ -10,8 +10,12 @@ import { BottomSheetDefaultBackdropProps } from "@gorhom/bottom-sheet/lib/typesc
 
 import { useVideoPlayerStore } from "../models/store";
 import { FullscreenControl, PlaybackControl, SettingsControl, SkipControl, TimeLapsControl, TimeLineControl } from "./VideoControls";
+import Animated, { useAnimatedStyle, useSharedValue, withTiming } from "react-native-reanimated";
 
 export const VideoPlayer = () => {
+  const hideControlsTimeout = useRef<number | null>(null);
+  const bottomSheetRef = useRef<BottomSheet>(null);
+
   // const videoUrl = useVideoPlayerStore(state => state.videoUrl);
   const videoFile = useVideoPlayerStore(state => state.videoFile);
   const isFullscreen = useVideoPlayerStore(state => state.isFullscreen);
@@ -20,6 +24,16 @@ export const VideoPlayer = () => {
 
   const isVisibleControls = useVideoPlayerStore(state => state.isVisibleControls);
   const setIsVisibleControls = useVideoPlayerStore(state => state.setIsVisibleControls);
+
+  const controlsOpacity = useSharedValue(isVisibleControls ? 1 : 0);
+
+  useEffect(() => {
+    controlsOpacity.value = withTiming(isVisibleControls ? 1 : 0, { duration: 250 });
+  }, [isVisibleControls]);
+
+  const controlsAnimatedStyle = useAnimatedStyle(() => ({
+    opacity: controlsOpacity.value,
+  }));
 
   const setPlayer = useVideoPlayerStore(state => state.setPlayer);
   const setStatus = useVideoPlayerStore(state => state.setStatus);
@@ -82,7 +96,39 @@ export const VideoPlayer = () => {
     setIsPlaying(isPlaying);
   }, [isPlaying, setIsPlaying]);
 
-  const bottomSheetRef = useRef<BottomSheet>(null);
+  const handleShowControls = useCallback(() => {
+    setIsVisibleControls(true);
+
+    // Если видео играет, запускаем таймер на скрытие
+    if (isPlaying) {
+      if (hideControlsTimeout.current) clearTimeout(hideControlsTimeout.current);
+      hideControlsTimeout.current = setTimeout(() => {
+        setIsVisibleControls(false);
+      }, 3000);
+    }
+  }, [isPlaying, setIsVisibleControls]);
+
+  useEffect(() => {
+    return () => {
+      if (hideControlsTimeout.current) clearTimeout(hideControlsTimeout.current);
+    };
+  }, []);
+
+  // Если видео на паузе — не скрываем контролы автоматически
+  useEffect(() => {
+    if (!isPlaying && hideControlsTimeout.current) {
+      clearTimeout(hideControlsTimeout.current);
+    } else if (isPlaying) handleShowControls();
+  }, [isPlaying]);
+
+  const handlePress = useCallback(() => {
+    if (isVisibleControls) {
+      setIsVisibleControls(false);
+      if (hideControlsTimeout.current) clearTimeout(hideControlsTimeout.current);
+    } else {
+      handleShowControls();
+    }
+  }, [isVisibleControls, setIsVisibleControls, handleShowControls]);
 
   const openSheet = useCallback(() => {
     bottomSheetRef.current?.expand();
@@ -123,45 +169,44 @@ export const VideoPlayer = () => {
         </View>
 
         <TouchableOpacity
-          onPress={() => setIsVisibleControls(!isVisibleControls)}
+          activeOpacity={1}
+          onPress={handlePress}
           className={`absolute h-full w-full ${isVisibleControls ? "bg-black/50" : "bg-transparent"}`}
         >
-          {isVisibleControls && (
-            <>
-              {status === "error" && (
-                <View className="absolute left-0 top-0 z-10 h-full w-full items-center justify-center px-4">
-                  <Text className="text-2 rounded bg-red-600/80 px-4 py-2 font-medium text-white">
-                    Произошла ошибка при загрузке видео {error?.message}
-                  </Text>
-                </View>
-              )}
-
-              <View className="absolute h-full w-full items-center justify-center">
-                <PlaybackControl />
+          <Animated.View pointerEvents={isVisibleControls ? "auto" : "none"} style={[{ flex: 1 }, controlsAnimatedStyle]}>
+            {status === "error" && (
+              <View className="absolute left-0 top-0 z-10 h-full w-full items-center justify-center px-4">
+                <Text className="text-2 rounded bg-red-600/80 px-4 py-2 font-medium text-white">
+                  Произошла ошибка при загрузке видео {error?.message}
+                </Text>
               </View>
+            )}
 
-              <View className="absolute h-full w-full items-center justify-center">
-                <SkipControl />
-              </View>
+            <View className="absolute h-full w-full items-center justify-center">
+              <PlaybackControl />
+            </View>
 
-              <View className={`absolute h-full w-full ${isFullscreen && "px-8"} items-end justify-start`}>
-                <View className={`${!isFullscreen ? "mx-4 mt-2" : "mt-4"}`}>
-                  <SettingsControl openSettings={openSheet} />
-                </View>
+            <View className="absolute h-full w-full items-center justify-center">
+              <SkipControl />
+            </View>
+
+            <View className={`absolute h-full w-full ${isFullscreen && "px-8"} items-end justify-start`}>
+              <View className={`${!isFullscreen ? "mx-4 mt-2" : "mt-4"}`}>
+                <SettingsControl openSettings={openSheet} />
               </View>
-            </>
-          )}
+            </View>
+          </Animated.View>
         </TouchableOpacity>
 
         <View className={`absolute bottom-0 w-full ${isFullscreen && "bottom-3 px-8"}`}>
-          {isVisibleControls && (
+          <Animated.View pointerEvents={isVisibleControls ? "auto" : "none"} style={[{ flex: 1 }, controlsAnimatedStyle]}>
             <View className={`flex-row items-center justify-between ${isFullscreen ? "mb-2 px-0" : "mb-1 px-4"}`}>
               <TimeLapsControl />
               <FullscreenControl />
             </View>
-          )}
+          </Animated.View>
 
-          <TimeLineControl />
+          {(!isFullscreen || isVisibleControls) && <TimeLineControl />}
         </View>
       </View>
 
