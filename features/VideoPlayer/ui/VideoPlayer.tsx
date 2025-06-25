@@ -1,4 +1,4 @@
-import { JSX, useCallback, useEffect, useRef } from "react";
+import { JSX, useCallback, useEffect, useRef, useState } from "react";
 import { Text, TouchableOpacity, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
@@ -16,6 +16,8 @@ export const VideoPlayer = () => {
   const videoFile = useVideoPlayerStore(state => state.videoFile);
   const isFullscreen = useVideoPlayerStore(state => state.isFullscreen);
 
+  const [isRepeatable, setIsRepeatable] = useState<boolean>(false)
+
   const setPlayer = useVideoPlayerStore(state => state.setPlayer);
   const setStatus = useVideoPlayerStore(state => state.setStatus);
   const setIsPlaying = useVideoPlayerStore(state => state.setIsPlaying);
@@ -26,12 +28,17 @@ export const VideoPlayer = () => {
   const setIsOpenSettings = useVideoPlayerStore(state => state.setIsOpenSettings);
 
   const player = useVideoPlayer(videoFile, player => {
-    player.loop = false;
     player.timeUpdateEventInterval = 1;
   });
   useEffect(() => {
     setPlayer(player);
   }, [player, setPlayer]);
+
+  useEffect(() => {
+    if (player) {
+      player.loop = isRepeatable;
+    }
+  }, [player, isRepeatable]);
 
   const { currentTime, bufferedPosition } = useEvent(player, "timeUpdate", {
     currentTime: player.currentTime,
@@ -153,13 +160,18 @@ export const VideoPlayer = () => {
           if (toIndex === -1) setIsOpenSettings(false);
           else setIsOpenSettings(true);
         }}
+        animationConfigs={{
+          damping: 120,
+          stiffness: 100
+        }}
         backgroundStyle={{ backgroundColor: "#1a1a1a" }}
         handleIndicatorStyle={{ backgroundColor: "#383838" }}
         backdropComponent={renderBackdrop}
       >
         <BottomSheetView className="flex-1 px-8 py-2">
-          <TouchableOpacity className="flex flex-row items-center justify-between">
-            <Text className="font-montserrat-medium text-lg text-white">Повтор воиспроизведения</Text>
+          <TouchableOpacity onPress={() => setIsRepeatable(prev => !prev)} className="flex flex-row items-center justify-between">
+            <Text className="font-montserrat-medium text-lg text-slate-200">Повтор воспроизведения</Text>
+            <Text className="font-montserrat-medium text-base text-zinc-500">{isRepeatable ? "Вкл." : "Выкл."}</Text>
           </TouchableOpacity>
           {/* Здесь будут настройки */}
         </BottomSheetView>
