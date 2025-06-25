@@ -10,6 +10,8 @@ import { useVideoPlayerStore } from "@/features/VideoPlayer/models/store";
 export const SkipControl = () => {
   const player = useVideoPlayerStore(state => state.player);
 
+  const setCurrentTime = useVideoPlayerStore(state => state.setCurrentTime);
+
   const [showLeftAnimated, setShowLeftAnimated] = useState(false);
   const [showRightAnimated, setShowRightAnimated] = useState(false);
 
@@ -33,11 +35,11 @@ export const SkipControl = () => {
   };
 
   const handleSeekLeft = () => {
-    player?.seekBy(-10);
+    if(player) setCurrentTime(player.currentTime += -10)
     onLeftAnimated();
   };
   const handleSeekRight = () => {
-    player?.seekBy(10);
+    if(player) setCurrentTime(player.currentTime += 10)
     onRightAnimated();
   };
 
@@ -51,40 +53,42 @@ export const SkipControl = () => {
 
   return (
     <View className="flex h-full w-full flex-row justify-between">
+      <View className="h-full w-1/3 items-center justify-center">
+        {showLeftAnimated && (
+          <Animated.View
+            className="h-full w-full items-center justify-center bg-black/50"
+            style={{
+              opacity: leftOpacity,
+              borderTopRightRadius: 200,
+              borderBottomRightRadius: 200,
+            }}
+          >
+            <Icons name="banckward" size={24} color="white" />
+            <Text className="mt-2 text-lg font-bold text-white">-10 сек</Text>
+          </Animated.View>
+        )}
+      </View>
       <GestureDetector gesture={doubleTapLeft}>
-        <View className="h-full w-1/3 items-center justify-center">
-          {showLeftAnimated && (
-            <Animated.View
-              className="h-full w-full items-center justify-center bg-black/50"
-              style={{
-                opacity: leftOpacity,
-                borderTopRightRadius: 200,
-                borderBottomRightRadius: 200,
-              }}
-            >
-              <Icons name="banckward" size={24} color="white" />
-              <Text className="mt-2 text-lg font-bold text-white">-10 сек</Text>
-            </Animated.View>
-          )}
-        </View>
+        <View className="absolute left-0 h-full w-2/12"></View>
       </GestureDetector>
 
+      <View className="h-full w-1/3 items-center justify-center">
+        {showRightAnimated && (
+          <Animated.View
+            className="h-full w-full items-center justify-center bg-black/50"
+            style={{
+              opacity: rightOpacity,
+              borderTopLeftRadius: 200,
+              borderBottomLeftRadius: 200,
+            }}
+          >
+            <Icons name="forward" size={24} color="white" />
+            <Text className="mt-2 text-lg font-bold text-white">+10 сек</Text>
+          </Animated.View>
+        )}
+      </View>
       <GestureDetector gesture={doubleTapRight}>
-        <View className="h-full w-1/3 items-center justify-center">
-          {showRightAnimated && (
-            <Animated.View
-              className="h-full w-full items-center justify-center bg-black/50"
-              style={{
-                opacity: rightOpacity,
-                borderTopLeftRadius: 200,
-                borderBottomLeftRadius: 200,
-              }}
-            >
-              <Icons name="forward" size={24} color="white" />
-              <Text className="mt-2 text-lg font-bold text-white">+10 сек</Text>
-            </Animated.View>
-          )}
-        </View>
+        <View className="absolute right-0 h-full w-2/12"></View>
       </GestureDetector>
     </View>
   );

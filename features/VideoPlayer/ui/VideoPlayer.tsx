@@ -194,10 +194,6 @@ export const VideoPlayer = () => {
               </View>
             )}
 
-            <View className="absolute h-full w-full items-center justify-center">
-              <SkipControl />
-            </View>
-
             <View className={`absolute h-full w-full ${isFullscreen && "px-8"} items-end justify-start`}>
               <View className={`${!isFullscreen ? "mx-4 mt-2" : "mt-4"}`}>
                 <SettingsControl openSettings={openSheet} />
@@ -205,6 +201,10 @@ export const VideoPlayer = () => {
             </View>
           </Animated.View>
         </TouchableOpacity>
+
+        <View pointerEvents="box-none" className="absolute h-full w-full items-center justify-center">
+          <SkipControl />
+        </View>
 
         <View className={`absolute -bottom-1 w-full ${isFullscreen && "bottom-3 px-8"}`}>
           <Animated.View pointerEvents={isVisibleControls ? "auto" : "none"} style={[{ flex: 1 }, controlsAnimatedStyle]}>
