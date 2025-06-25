@@ -1,5 +1,5 @@
 import React, { JSX, useCallback, useEffect, useRef, useState } from "react";
-import { Text, TouchableOpacity, View } from "react-native";
+import { ActivityIndicator, Text, TouchableOpacity, View } from "react-native";
 import Animated, { useAnimatedStyle, useSharedValue, withTiming } from "react-native-reanimated";
 import { SafeAreaView } from "react-native-safe-area-context";
 
@@ -174,6 +174,10 @@ export const VideoPlayer = () => {
           className={`absolute h-full w-full ${isVisibleControls ? "bg-black/50" : "bg-transparent"}`}
         >
           <Animated.View pointerEvents={isVisibleControls ? "auto" : "none"} style={[{ flex: 1 }, controlsAnimatedStyle]}>
+            <View className="absolute h-full w-full items-center justify-center">
+              <PlaybackControl />
+            </View>
+
             {status === "error" && (
               <View className="absolute left-0 top-0 z-10 h-full w-full items-center justify-center px-4">
                 <Text className="text-2 rounded bg-red-600/80 px-4 py-2 font-medium text-white">
@@ -182,9 +186,13 @@ export const VideoPlayer = () => {
               </View>
             )}
 
-            <View className="absolute h-full w-full items-center justify-center">
-              <PlaybackControl />
-            </View>
+            {status === "loading" && (
+              <View className="absolute h-full w-full items-center justify-center">
+                <TouchableOpacity className={`flex ${isFullscreen ? "h-20 w-20" : "h-14 w-14"} items-center justify-center rounded-full`}>
+                  <ActivityIndicator size={isFullscreen ? 38 : 32} color="white" />
+                </TouchableOpacity>
+              </View>
+            )}
 
             <View className="absolute h-full w-full items-center justify-center">
               <SkipControl />

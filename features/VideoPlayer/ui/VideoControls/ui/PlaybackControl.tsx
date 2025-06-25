@@ -27,8 +27,9 @@ export const PlaybackControl = () => {
             <PlayIcon className="translate-x-[1.5] translate-y-[0.5]" name="play" size={isFullscreen ? 26 : 20} color="white" />
           </TouchableOpacity>
         )
-      ) : status === "idle" ? (
-        isEnded ? (
+      ) : (
+        status === "idle" &&
+        (isEnded ? (
           <TouchableOpacity onPress={onReplay} className="flex h-full w-full items-center justify-center">
             <ReplayIcon name="replay" size={isFullscreen ? 38 : 32} color="white" />
           </TouchableOpacity>
@@ -36,13 +37,7 @@ export const PlaybackControl = () => {
           <TouchableOpacity onPress={onPlayback} className="flex h-full w-full items-center justify-center">
             <PlayIcon className="translate-x-[1.5] translate-y-[0.5]" name="play" size={isFullscreen ? 26 : 20} color="white" />
           </TouchableOpacity>
-        )
-      ) : (
-        status === "loading" && (
-          <TouchableOpacity className="flex h-full w-full items-center justify-center">
-            <ActivityIndicator size={isFullscreen ? 38 : 32} color="white" />
-          </TouchableOpacity>
-        )
+        ))
       )}
     </View>
   );

@@ -1,11 +1,6 @@
 import { useEffect } from "react";
 import { Platform, View } from "react-native";
-import Animated, {
-  useSharedValue,
-  withTiming,
-  useAnimatedStyle,
-  Easing,
-} from "react-native-reanimated";
+import Animated, { useSharedValue, withTiming, useAnimatedStyle, Easing } from "react-native-reanimated";
 
 import Slider from "@react-native-community/slider";
 import { useVideoPlayerStore } from "@/features/VideoPlayer/models/store";
@@ -25,6 +20,8 @@ export const TimeLineControl = () => {
   const setIsSliding = useVideoPlayerStore(state => state.setIsSliding);
 
   const isVisibleControls = useVideoPlayerStore(state => state.isVisibleControls);
+  const setIsVisibleControls = useVideoPlayerStore(state => state.setIsVisibleControls);
+
   const isOpenSettings = useVideoPlayerStore(state => state.isOpenSettings);
 
   const bufferWidth = useSharedValue(0);
@@ -53,7 +50,7 @@ export const TimeLineControl = () => {
   }, [currentTime, duration, progressWidth]);
 
   const controlsAnimatedStyle = useAnimatedStyle(() => ({
-    opacity: controlsOpacity.value,
+    opacity: isSliding ? 1 : controlsOpacity.value,
   }));
 
   const bufferStyle = useAnimatedStyle(() => ({
@@ -68,11 +65,24 @@ export const TimeLineControl = () => {
     <View className="relative w-full">
       {!isFullscreen && <View className="absolute left-0 top-1/2 h-[0.15rem] w-full -translate-y-1/2 bg-zinc-700"></View>}
 
-      {isVisibleControls && <Animated.View style={bufferStyle} className="absolute left-0 top-1/2 h-[0.15rem] w-full -translate-y-1/2 bg-zinc-400"></Animated.View>}
+      {isVisibleControls && (
+        <Animated.View
+          style={bufferStyle}
+          className="absolute left-0 top-1/2 h-[0.15rem] w-full -translate-y-1/2 bg-zinc-400"
+        ></Animated.View>
+      )}
 
-      {!isFullscreen && <Animated.View style={progressStyle} className={`absolute left-0 top-1/2 h-[0.15rem] w-full -translate-y-1/2 ${isVisibleControls ? "bg-rose-600" : "bg-slate-200"}`} />}
+      {!isFullscreen && (
+        <Animated.View
+          style={progressStyle}
+          className={`absolute left-0 top-1/2 h-[0.15rem] w-full -translate-y-1/2 ${(isVisibleControls || isSliding) ? "bg-rose-600" : "bg-slate-200"}`}
+        />
+      )}
 
-      <Animated.View style={[{ flex: 1 }, controlsAnimatedStyle]} className="absolute top-1/2 flex h-[2rem] w-full -translate-y-1/2 justify-center">
+      <Animated.View
+        style={[{ flex: 1 }, controlsAnimatedStyle]}
+        className="absolute top-1/2 flex h-[2rem] w-full -translate-y-1/2 justify-center"
+      >
         <Slider
           style={{
             marginLeft: Platform.select({ ios: 0, android: -15 }),
@@ -83,11 +93,12 @@ export const TimeLineControl = () => {
           maximumValue={duration}
           value={currentTime}
           step={0.1}
-          minimumTrackTintColor={isVisibleControls ? "#e11d48" : "#ffffff"}
+          minimumTrackTintColor={(isVisibleControls || isSliding) ? "#e11d48" : "#ffffff"}
           maximumTrackTintColor="#737373"
           thumbTintColor={isOpenSettings ? "transparent" : "#e11d48"}
           onSlidingStart={() => {
             player?.pause();
+            setIsVisibleControls(true)
             setIsSliding(true);
           }}
           onValueChange={value => {
